@@ -1,0 +1,16 @@
+[phases.setup]
+aptPkgs = [
+  "libreoffice",
+  "ghostscript",
+  "python3",
+  "python3-pip"
+]
+
+[phases.install]
+cmds = [
+  "npm install",
+  "pip3 install pdf2docx pdfplumber pandas openpyxl"
+]
+
+[start]
+cmd = "node server.js"
