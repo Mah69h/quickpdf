@@ -12,18 +12,21 @@ import HTMLtoPDF from "./components/HTMLtoPDF";
 import PDFtoWORD from "./components/PDFtoWORD";
 import PDFtoPPT from "./components/PDFtoPPT";
 import PDFtoExcel from "./components/PDFtoExcel";
+import logo from './assets/logo.png'
 
 function App() {
   const [tool, setTool] = useState('merge');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white flex flex-col items-center justify-center px-4">
+    <div>
+    <div className="flex justify-center mb-8">
+  <img
+    src={logo}
+    alt="QuickPDF"
+    className="w-[420px] md:w-[520px] object-contain"
+  />
+</div>
 
-  <h1 className="text-5xl font-bold mb-8 tracking-wide">
-    PDF Toolkit
-  </h1>
-
-  <div className="flex gap-4 mb-8 bg-gray-800 p-2 rounded-xl">
     <button
   className={`px-6 py-2 rounded-lg transition transform hover:scale-105 active:scale-95 ${
     tool === 'merge'
@@ -65,8 +68,6 @@ function App() {
   onClick={() => setTool('convert')}>
   Convert PDF
 </button>
-  
-  </div>
 
  <div className="bg-gray-800/70 backdrop-blur-md p-10 rounded-3xl shadow-2xl w-full max-w-lg min-h-[350px] transition-all duration-300">
  {tool === 'merge' && <MergePDF />}
