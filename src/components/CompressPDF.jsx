@@ -17,8 +17,8 @@ formData.append('file', file);
 formData.append('level', level);
 
   try {
-    await new Promise(res => setTimeout(res, 1200));
-    const res = await fetch('http://localhost:5000/compress', {
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    const response = await fetch('http://localhost:5000/compress', {
       method: 'POST',
       body: formData,
     });
