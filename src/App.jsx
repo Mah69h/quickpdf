@@ -27,7 +27,7 @@ function App() {
     <button
   className={`px-6 py-2 rounded-lg transition transform hover:scale-105 active:scale-95 ${
     tool === 'merge'
-      ? 'bg-blue-500 shadow-lg'
+      ? 'bg-red-600 shadow-lg'
       : 'text-gray-400 hover:text-white'
   }`}
   onClick={() => setTool('merge')}
@@ -38,7 +38,7 @@ function App() {
    <button
   className={`px-6 py-2 rounded-lg transition transform hover:scale-105 active:scale-95 ${
     tool === 'split'
-      ? 'bg-blue-500 shadow-lg'
+      ? 'bg-red-600 shadow-lg'
       : 'text-gray-400 hover:text-white'
   }`}
   onClick={() => setTool('split')}
@@ -48,7 +48,7 @@ function App() {
      <button
   className={`px-6 py-2 rounded-lg transition transform hover:scale-105 active:scale-95 ${
     tool === 'compress'
-      ? 'bg-blue-500 shadow-lg'
+      ? 'bg-red-600 shadow-lg'
       : 'text-gray-400 hover:text-white'
   }`}
   onClick={() => setTool('compress')}
@@ -59,7 +59,7 @@ function App() {
   <button 
   className={`px-6 py-2 rounded-lg transition transform hover:scale-105 active:scale-95 ${
     tool === 'convert'
-      ? 'bg-blue-500 shadow-lg'
+      ? 'bg-red-600 shadow-lg'
       : 'text-gray-400 hover:text-white'
   }`}
   onClick={() => setTool('convert')}>
