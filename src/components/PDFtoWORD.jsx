@@ -19,7 +19,7 @@ export default function PDFtoWORD() {
     try {
 
       const res = await fetch(
-        'http://localhost:5000/pdf-to-word',
+        'https://quickpdf-d77h.onrender.com/pdf-to-word',
         {
           method: 'POST',
           body: formData,

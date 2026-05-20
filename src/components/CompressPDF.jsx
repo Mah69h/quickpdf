@@ -18,7 +18,7 @@ formData.append('level', level);
 
   try {
     await new Promise(resolve => setTimeout(resolve, 1200));
-    const response = await fetch('http://localhost:5000/compress', {
+    const response = await fetch('https://quickpdf-d77h.onrender.com/compress', {
       method: 'POST',
       body: formData,
     });

@@ -19,7 +19,7 @@ export default function PDFtoExcel() {
     try {
 
       const res = await fetch(
-        'http://localhost:5000/pdf-to-excel',
+        'https://quickpdf-d77h.onrender.com/pdf-to-excel',
         {
           method: 'POST',
           body: formData,

@@ -18,7 +18,7 @@ export default function PowerPointtoPDF() {
     try {
 
       const res = await fetch(
-        'http://localhost:5000/ppt-to-pdf',
+        'https://quickpdf-d77h.onrender.com/ppt-to-pdf',
         {
           method: 'POST',
           body: formData,
