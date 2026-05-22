@@ -529,19 +529,22 @@ export default function MergePDF() {
       "
     >
 
-      <div
-        className="
-          w-10 h-10
-          rounded-xl
-          bg-red-600
-          group-hover:bg-red-500
-          flex items-center justify-center
-          text-white text-2xl
-          transition
-        "
-      >
-        +
-      </div>
+     <div
+  className="
+    w-10 h-10
+    rounded-xl
+    bg-red-600
+    group-hover:bg-red-500
+    flex items-center justify-center
+    transition
+  "
+>
+
+  <span className="text-white text-3xl leading-none -mt-1">
+    +
+  </span>
+
+</div>
 
       <div className="text-left">
 
