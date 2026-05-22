@@ -1,198 +1,170 @@
-import { useState } from 'react';
-
+import { useState, useRef } from 'react';
 import { PDFDocument } from 'pdf-lib';
-
 import JSZip from 'jszip';
-
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
-  `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 export default function SplitPDF() {
-
   const [file, setFile] = useState(null);
-
   const [loading, setLoading] = useState(false);
-
   const [pages, setPages] = useState('');
-
   const [pageCount, setPageCount] = useState(0);
-
   const [thumbnail, setThumbnail] = useState(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  const inputRef = useRef(null);
 
   // ─────────────────────────────────────────────
   // Parse Pages
   // ─────────────────────────────────────────────
 
-  const parsePages = (
-    input,
-    totalPages
-  ) => {
-
+  const parsePages = (input, totalPages) => {
     let result = [];
 
     input.split(',').forEach((part) => {
+      part = part.trim();
+
+      if (!part) return;
 
       if (part.includes('-')) {
+        let [start, end] = part
+          .split('-')
+          .map((n) => Number(n.trim()));
 
-        let [start, end] =
-          part.split('-').map(Number);
+        if (isNaN(start) || isNaN(end)) return;
 
-        for (
-          let i = start;
-          i <= end;
-          i++
-        ) {
+        for (let i = start; i <= end; i++) {
           result.push(i - 1);
         }
-
       } else {
+        const page = Number(part);
 
-        result.push(Number(part) - 1);
+        if (!isNaN(page)) {
+          result.push(page - 1);
+        }
       }
     });
 
     return result
-      .filter(
-        (p) =>
-          p >= 0 &&
-          p < totalPages
-      )
-      .filter(
-        (p, index, self) =>
-          self.indexOf(p) === index
-      );
+      .filter((p) => p >= 0 && p < totalPages)
+      .filter((p, index, self) => self.indexOf(p) === index);
   };
 
   // ─────────────────────────────────────────────
-  // Generate Preview + Meta
+  // Generate Preview
   // ─────────────────────────────────────────────
 
-  const generatePreview =
-    async (selectedFile) => {
+  const generatePreview = async (selectedFile) => {
+    const buffer = await selectedFile.arrayBuffer();
 
-      const buffer =
-        await selectedFile.arrayBuffer();
+    const typedArray = new Uint8Array(buffer);
 
-      const typedArray =
-        new Uint8Array(buffer);
+    const pdf = await pdfjsLib.getDocument({
+      data: typedArray
+    }).promise;
 
-      const pdf =
-        await pdfjsLib.getDocument({
-          data: typedArray
-        }).promise;
+    setPageCount(pdf.numPages);
 
-      setPageCount(pdf.numPages);
+    const page = await pdf.getPage(1);
 
-      const page =
-        await pdf.getPage(1);
+    const viewport = page.getViewport({
+      scale: 0.35
+    });
 
-      const viewport =
-        page.getViewport({
-          scale: 0.35
-        });
+    const canvas = document.createElement('canvas');
 
-      const canvas =
-        document.createElement('canvas');
+    const context = canvas.getContext('2d');
 
-      const context =
-        canvas.getContext('2d');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
 
-      canvas.width =
-        viewport.width;
+    await page.render({
+      canvasContext: context,
+      viewport
+    }).promise;
 
-      canvas.height =
-        viewport.height;
+    const image = canvas.toDataURL(
+      'image/jpeg',
+      0.7
+    );
 
-      await page.render({
-        canvasContext: context,
-        viewport
-      }).promise;
-
-      setThumbnail(
-        canvas.toDataURL(
-          'image/jpeg',
-          0.7
-        )
-      );
-    };
+    setThumbnail(image);
+  };
 
   // ─────────────────────────────────────────────
   // Handle File
   // ─────────────────────────────────────────────
 
-  const handleFile =
-    async (selectedFile) => {
+  const handleFile = async (selectedFile) => {
+    if (
+      !selectedFile ||
+      selectedFile.type !== 'application/pdf'
+    ) {
+      alert('Please upload a valid PDF file');
+      return;
+    }
 
-      if (
-        !selectedFile ||
-        selectedFile.type !==
-          'application/pdf'
-      ) {
-        return;
-      }
+    setFile(selectedFile);
 
-      setFile(selectedFile);
+    await generatePreview(selectedFile);
+  };
 
-      await generatePreview(
-        selectedFile
-      );
-    };
+  // ─────────────────────────────────────────────
+  // Drag & Drop
+  // ─────────────────────────────────────────────
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+
+    setIsDragOver(false);
+
+    const droppedFile = e.dataTransfer.files[0];
+
+    if (droppedFile) {
+      await handleFile(droppedFile);
+    }
+  };
 
   // ─────────────────────────────────────────────
   // Split PDF
   // ─────────────────────────────────────────────
 
   const splitPDF = async () => {
-
     if (!file) return;
 
     try {
-
       setLoading(true);
 
-      const bytes =
-        await file.arrayBuffer();
+      const bytes = await file.arrayBuffer();
 
-      const pdf =
-        await PDFDocument.load(
-          bytes
+      const pdf = await PDFDocument.load(bytes);
+
+      const totalPages = pdf.getPageCount();
+
+      const pageIndexes = pages
+        ? parsePages(pages, totalPages)
+        : [...Array(totalPages).keys()];
+
+      if (pageIndexes.length === 0) {
+        alert('Invalid page selection');
+        return;
+      }
+
+      const zip = new JSZip();
+
+      for (const i of pageIndexes) {
+        const newPdf = await PDFDocument.create();
+
+        const [page] = await newPdf.copyPages(
+          pdf,
+          [i]
         );
-
-      const totalPages =
-        pdf.getPageCount();
-
-      const pageIndexes =
-        pages
-          ? parsePages(
-              pages,
-              totalPages
-            )
-          : [
-              ...Array(
-                totalPages
-              ).keys()
-            ];
-
-      const zip =
-        new JSZip();
-
-      for (let i of pageIndexes) {
-
-        const newPdf =
-          await PDFDocument.create();
-
-        const [page] =
-          await newPdf.copyPages(
-            pdf,
-            [i]
-          );
 
         newPdf.addPage(page);
 
-        const newBytes =
-          await newPdf.save();
+        const newBytes = await newPdf.save();
 
         zip.file(
           `page-${i + 1}.pdf`,
@@ -206,139 +178,116 @@ export default function SplitPDF() {
         });
 
       const zipUrl =
-        URL.createObjectURL(
-          zipBlob
-        );
+        URL.createObjectURL(zipBlob);
 
       const a =
         document.createElement('a');
 
       a.href = zipUrl;
 
-      a.download =
-        'quickpdf-split.zip';
+      a.download = 'quickpdf-split.zip';
 
       a.click();
 
       setTimeout(() => {
-        URL.revokeObjectURL(
-          zipUrl
-        );
+        URL.revokeObjectURL(zipUrl);
       }, 5000);
 
     } catch (err) {
-
       console.error(err);
 
-      alert(
-        'Failed to split PDF'
-      );
-
+      alert('Failed to split PDF');
     } finally {
-
       setLoading(false);
     }
   };
 
   // ─────────────────────────────────────────────
-  // Combine Selected Pages
+  // Extract Selected Pages
   // ─────────────────────────────────────────────
 
-  const combineSelectedPages =
-    async () => {
+  const combineSelectedPages = async () => {
+    if (!file) return;
 
-      if (!file) return;
+    try {
+      setLoading(true);
 
-      try {
+      const bytes = await file.arrayBuffer();
 
-        setLoading(true);
+      const pdf = await PDFDocument.load(bytes);
 
-        const bytes =
-          await file.arrayBuffer();
+      const totalPages = pdf.getPageCount();
 
-        const pdf =
-          await PDFDocument.load(
-            bytes
-          );
+      const pageIndexes = pages
+        ? parsePages(pages, totalPages)
+        : [...Array(totalPages).keys()];
 
-        const totalPages =
-          pdf.getPageCount();
-
-        const pageIndexes =
-          pages
-            ? parsePages(
-                pages,
-                totalPages
-              )
-            : [
-                ...Array(
-                  totalPages
-                ).keys()
-              ];
-
-        const newPdf =
-          await PDFDocument.create();
-
-        const copiedPages =
-          await newPdf.copyPages(
-            pdf,
-            pageIndexes
-          );
-
-        copiedPages.forEach(
-          (page) =>
-            newPdf.addPage(page)
-        );
-
-        const newBytes =
-          await newPdf.save();
-
-        const blob =
-          new Blob(
-            [newBytes],
-            {
-              type:
-                'application/pdf'
-            }
-          );
-
-        const url =
-          URL.createObjectURL(
-            blob
-          );
-
-        const a =
-          document.createElement('a');
-
-        a.href = url;
-
-        a.download =
-          'quickpdf-selected-pages.pdf';
-
-        a.click();
-
-        setTimeout(() => {
-          URL.revokeObjectURL(
-            url
-          );
-        }, 5000);
-
-      } catch (err) {
-
-        console.error(err);
-
-        alert(
-          'Failed to combine pages'
-        );
-
-      } finally {
-
-        setLoading(false);
+      if (pageIndexes.length === 0) {
+        alert('Invalid page selection');
+        return;
       }
-    };
+
+      const newPdf =
+        await PDFDocument.create();
+
+      const copiedPages =
+        await newPdf.copyPages(
+          pdf,
+          pageIndexes
+        );
+
+      copiedPages.forEach((page) =>
+        newPdf.addPage(page)
+      );
+
+      const newBytes =
+        await newPdf.save();
+
+      const blob = new Blob(
+        [newBytes],
+        {
+          type: 'application/pdf'
+        }
+      );
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const a =
+        document.createElement('a');
+
+      a.href = url;
+
+      a.download =
+        'quickpdf-selected-pages.pdf';
+
+      a.click();
+
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 5000);
+
+    } catch (err) {
+      console.error(err);
+
+      alert('Failed to extract pages');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ─────────────────────────────────────────────
+  // Remove File
+  // ─────────────────────────────────────────────
+
+  const removeFile = () => {
+    setFile(null);
+    setThumbnail(null);
+    setPages('');
+    setPageCount(0);
+  };
 
   return (
-
     <div className="w-full max-w-2xl mx-auto text-center">
 
       {/* HEADER */}
@@ -347,75 +296,69 @@ export default function SplitPDF() {
         Split PDF
       </h2>
 
-     {/* UPLOAD BOX */}
+      {/* UPLOAD BOX */}
 
-<div
-  onClick={() =>
-    inputRef.current?.click()
-  }
+      <div
+        onClick={() =>
+          inputRef.current?.click()
+        }
 
-  onDragOver={(e) => {
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragOver(true);
+        }}
 
-    e.preventDefault();
+        onDragLeave={() =>
+          setIsDragOver(false)
+        }
 
-    setIsDragOver(true);
-  }}
+        onDrop={handleDrop}
 
-  onDragLeave={() =>
-    setIsDragOver(false)
-  }
+        className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
+          isDragOver
+            ? 'border-red-500 bg-gray-900'
+            : 'border-gray-700 bg-gray-900 hover:border-red-500'
+        }`}
+      >
 
-  onDrop={handleDrop}
+        <input
+          ref={inputRef}
+          type="file"
+          accept="application/pdf"
+          className="hidden"
 
-  className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
-    isDragOver
-      ? 'border-red-500 bg-gray-900'
-      : 'border-gray-700 bg-gray-900 hover:border-red-500'
-  }`}
->
+          onChange={async (e) => {
+            const selectedFile =
+              e.target.files[0];
 
-  <input
-    ref={inputRef}
-    type="file"
-    multiple
-    accept="application/pdf"
-    className="hidden"
+            if (selectedFile) {
+              await handleFile(
+                selectedFile
+              );
+            }
+          }}
+        />
 
-    onChange={async (e) => {
+        <div className="text-6xl mb-4">
+          📄
+        </div>
 
-      const selectedFiles =
-        Array.from(
-          e.target.files
-        );
+        <p className="text-xl text-white font-medium">
+          Drag & drop PDF here
+        </p>
 
-      await addFiles(
-        selectedFiles
-      );
-    }}
-  />
+        <p className="text-sm text-gray-500 mt-2">
+          Fast • Secure • Local Processing
+        </p>
 
-  <div className="text-6xl mb-4">
-    📄
-  </div>
-
-  <p className="text-xl text-white font-medium">
-    Drag & drop PDFs here
-  </p>
-
-  <p className="text-sm text-gray-500 mt-2">
-    Fast • Secure • Local Processing
-  </p>
-
-</div>
+      </div>
 
       {/* FILE PREVIEW */}
 
       {file && (
-
         <div className="mt-6 bg-gray-900 border border-gray-800 rounded-2xl p-4 flex items-center gap-4">
 
           {thumbnail && (
-
             <img
               src={thumbnail}
               alt="PDF Preview"
@@ -443,17 +386,7 @@ export default function SplitPDF() {
           </div>
 
           <button
-            onClick={() => {
-
-              setFile(null);
-
-              setThumbnail(null);
-
-              setPages('');
-
-              setPageCount(0);
-            }}
-
+            onClick={removeFile}
             className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl text-white transition"
           >
             Remove
@@ -465,7 +398,6 @@ export default function SplitPDF() {
       {/* PAGE INPUT */}
 
       {file && (
-
         <input
           type="text"
 
@@ -474,9 +406,7 @@ export default function SplitPDF() {
           value={pages}
 
           onChange={(e) =>
-            setPages(
-              e.target.value
-            )
+            setPages(e.target.value)
           }
 
           className="mt-6 w-full bg-gray-900 border border-gray-700 focus:border-red-500 outline-none rounded-2xl px-5 py-4 text-white"
@@ -486,7 +416,6 @@ export default function SplitPDF() {
       {/* ACTION BUTTONS */}
 
       {file && (
-
         <div className="flex gap-4 mt-6">
 
           {/* SPLIT */}
@@ -509,7 +438,7 @@ export default function SplitPDF() {
 
           </button>
 
-          {/* COMBINE */}
+          {/* EXTRACT */}
 
           <button
             onClick={
