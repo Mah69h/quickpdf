@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 import { PDFDocument } from 'pdf-lib';
 
@@ -358,34 +358,27 @@ export default function MergePDF() {
 
     <div className="text-center w-full max-w-3xl mx-auto">
 
-      <h2 className="text-5xl font-bold mb-10 text-white">
+      <h2 className="text-3xl font-bold mb-6">
         Merge PDF
       </h2>
 
       {/* UPLOAD BOX */}
       <div
-        onClick={() =>
-          inputRef.current?.click()
-        }
-
+        onClick={() => inputRef.current?.click()}
         onDragOver={(e) => {
-
           e.preventDefault();
-
           setIsDragOver(true);
         }}
-
-        onDragLeave={() =>
-          setIsDragOver(false)
-        }
-
+        onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
-
-        className={`border-2 border-dashed rounded-3xl p-14 cursor-pointer transition-all duration-200 ${
-          isDragOver
-            ? 'border-red-500 bg-red-500/5'
-            : 'border-gray-700 bg-gray-900 hover:border-gray-500'
-        }`}
+        className={`
+          border-2 border-dashed rounded-3xl p-14 text-center cursor-pointer transition-all duration-200
+          ${
+            isDragOver
+              ? 'border-red-500 bg-red-500/5'
+              : 'border-gray-700 bg-gray-900/40 hover:border-gray-500'
+          }
+        `}
       >
 
         <input
@@ -394,7 +387,6 @@ export default function MergePDF() {
           multiple
           accept="application/pdf"
           className="hidden"
-
           onChange={async (e) => {
 
             const selectedFiles =
@@ -412,12 +404,12 @@ export default function MergePDF() {
           📄
         </div>
 
-        <p className="text-2xl font-semibold text-white mb-2">
+        <h3 className="text-2xl font-semibold text-white mb-2">
           Drag & drop PDFs here
-        </p>
+        </h3>
 
         <p className="text-gray-500 text-sm">
-          Fast • Secure • Local Processing
+          Unlimited • No Login • Secure
         </p>
 
       </div>
@@ -518,12 +510,12 @@ export default function MergePDF() {
 
         {loading
           ? 'Merging PDFs...'
-          : `Merge ${files.length} PDF${files.length !== 1 ? 's' : ''}`}
+          : `Merge ${files.length} PDF${files.length > 1 ? 's' : ''}`}
 
       </button>
 
       {/* FOOTER */}
-      <div className="flex justify-center gap-8 mt-10 text-gray-500 text-sm">
+      <div className="flex justify-center gap-6 mt-10 text-gray-600 text-xs">
 
         <div>
           🔒 Local Processing
