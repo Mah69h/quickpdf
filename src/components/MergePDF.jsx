@@ -443,67 +443,105 @@ export default function MergePDF() {
         Merge PDF
       </h2>
 
-      {/* UPLOAD BOX */}
+      {/* UPLOAD AREA */}
 
-      <div
-        onClick={() =>
-          inputRef.current?.click()
-        }
+{files.length === 0 ? (
 
-        onDragOver={(e) => {
+  <div
+    onClick={() =>
+      inputRef.current?.click()
+    }
 
-          e.preventDefault();
+    onDragOver={(e) => {
 
-          setIsDragOver(true);
-        }}
+      e.preventDefault();
 
-        onDragLeave={() =>
-          setIsDragOver(false)
-        }
+      setIsDragOver(true);
+    }}
 
-        onDrop={handleDrop}
+    onDragLeave={() =>
+      setIsDragOver(false)
+    }
 
-        className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
-          isDragOver
-            ? 'border-red-500 bg-gray-900'
-            : 'border-gray-700 bg-gray-900 hover:border-red-500'
-        }`}
-      >
+    onDrop={handleDrop}
 
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          accept="application/pdf"
-          className="hidden"
+    className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
+      isDragOver
+        ? 'border-red-500 bg-gray-900'
+        : 'border-gray-700 bg-gray-900 hover:border-red-500'
+    }`}
+  >
 
-          onChange={async (e) => {
+    <input
+      ref={inputRef}
+      type="file"
+      multiple
+      accept="application/pdf"
+      className="hidden"
 
-            const selectedFiles =
-              Array.from(
-                e.target.files
-              );
+      onChange={async (e) => {
 
-            await addFiles(
-              selectedFiles
-            );
-          }}
-        />
+        const selectedFiles =
+          Array.from(
+            e.target.files
+          );
 
-        <div className="text-6xl mb-4">
-          📄
-        </div>
+        await addFiles(
+          selectedFiles
+        );
+      }}
+    />
 
-        <p className="text-xl text-white font-medium">
-          Drag & drop PDFs here
-        </p>
+    <div className="text-6xl mb-4">
+      📄
+    </div>
 
-        <p className="text-sm text-gray-500 mt-2">
-          Fast • Secure • Local Processing
-        </p>
+    <p className="text-xl text-white font-medium">
+      Drag & drop PDFs here
+    </p>
 
-      </div>
+    <p className="text-sm text-gray-500 mt-2">
+      Fast • Secure • Local Processing
+    </p>
 
+  </div>
+
+) : (
+
+  <div className="flex justify-end mb-4">
+
+    <button
+      onClick={() =>
+        inputRef.current?.click()
+      }
+
+      className="w-14 h-14 rounded-full bg-red-600 hover:bg-red-700 text-white text-3xl flex items-center justify-center shadow-lg transition"
+    >
+      +
+    </button>
+
+    <input
+      ref={inputRef}
+      type="file"
+      multiple
+      accept="application/pdf"
+      className="hidden"
+
+      onChange={async (e) => {
+
+        const selectedFiles =
+          Array.from(
+            e.target.files
+          );
+
+        await addFiles(
+          selectedFiles
+        );
+      }}
+    />
+
+  </div>
+)}
       {/* FILE LIST */}
 
       {files.length > 0 && (
