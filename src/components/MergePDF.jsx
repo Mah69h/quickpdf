@@ -443,7 +443,7 @@ export default function MergePDF() {
         Merge PDF
       </h2>
 
-      {/* UPLOAD AREA */}
+{/* UPLOAD AREA */}
 
 {files.length === 0 ? (
 
@@ -465,7 +465,7 @@ export default function MergePDF() {
 
     onDrop={handleDrop}
 
-    className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
+    className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition-all duration-200 ${
       isDragOver
         ? 'border-red-500 bg-gray-900'
         : 'border-gray-700 bg-gray-900 hover:border-red-500'
@@ -508,16 +508,53 @@ export default function MergePDF() {
 
 ) : (
 
-  <div className="flex justify-end mb-4">
+  <div className="flex justify-end mb-5">
 
     <button
       onClick={() =>
         inputRef.current?.click()
       }
 
-      className="w-14 h-14 rounded-full bg-red-600 hover:bg-red-700 text-white text-3xl flex items-center justify-center shadow-lg transition"
+      className="
+        group
+        flex items-center gap-3
+        bg-gray-900
+        border border-gray-800
+        hover:border-red-500
+        hover:bg-gray-800
+        px-5 py-3
+        rounded-2xl
+        transition-all duration-200
+        shadow-lg
+      "
     >
-      +
+
+      <div
+        className="
+          w-10 h-10
+          rounded-xl
+          bg-red-600
+          group-hover:bg-red-500
+          flex items-center justify-center
+          text-white text-2xl
+          transition
+        "
+      >
+        +
+      </div>
+
+      <div className="text-left">
+
+        <p className="text-white text-sm font-medium">
+          Add Files
+        </p>
+
+        <p className="text-gray-500 text-xs">
+          Add more PDFs
+        </p>
+
+      </div>
+
     </button>
 
     <input
