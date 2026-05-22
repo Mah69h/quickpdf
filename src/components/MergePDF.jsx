@@ -363,53 +363,62 @@ export default function MergePDF() {
       </h2>
 
       {/* UPLOAD BOX */}
-      <div
-        onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => {
+ <div
+        onClick={() =>
+          document
+            .getElementById(
+              'splitInput'
+            )
+            .click()
+        }
+
+        onDragOver={(e) =>
+          e.preventDefault()
+        }
+
+        onDrop={async (e) => {
+
           e.preventDefault();
-          setIsDragOver(true);
+
+          const droppedFile =
+            e.dataTransfer
+              .files[0];
+
+          await handleFile(
+            droppedFile
+          );
         }}
-        onDragLeave={() => setIsDragOver(false)}
-        onDrop={handleDrop}
-        className={`
-          border-2 border-dashed rounded-3xl p-14 text-center cursor-pointer transition-all duration-200
-          ${
-            isDragOver
-              ? 'border-red-500 bg-red-500/5'
-              : 'border-gray-700 bg-gray-900/40 hover:border-gray-500'
-          }
-        `}
+
+        className="border-2 border-dashed border-gray-700 hover:border-red-500 transition rounded-3xl p-12 cursor-pointer bg-gray-900"
       >
 
         <input
-          ref={inputRef}
+          id="splitInput"
           type="file"
-          multiple
           accept="application/pdf"
           className="hidden"
+
           onChange={async (e) => {
 
-            const selectedFiles =
-              Array.from(
-                e.target.files
-              );
+            const selectedFile =
+              e.target.files[0];
 
-            await addFiles(
-              selectedFiles
+            await handleFile(
+              selectedFile
             );
           }}
         />
 
-        <div className="text-6xl mb-5">
+        <div className="text-6xl mb-4">
           📄
         </div>
 
-        <h3 className="text-2xl font-semibold text-white mb-2">
-          Drag & drop PDFs here
-        </h3>
+        <p className="text-xl text-white font-medium">
+          Drag & drop PDF here
+        </p>
 
-        <p className="text-gray-500 text-sm">
-          Unlimited • No Login • Secure
+        <p className="text-sm text-gray-500 mt-2">
+          Fast • Secure • Local Processing
         </p>
 
       </div>
