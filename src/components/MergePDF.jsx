@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
 import { PDFDocument } from 'pdf-lib';
 
@@ -358,66 +358,65 @@ export default function MergePDF() {
 
     <div className="text-center w-full max-w-3xl mx-auto">
 
-      <h2 className="text-3xl font-bold mb-6">
+      <h2 className="text-5xl font-bold mb-10 text-white">
         Merge PDF
       </h2>
 
       {/* UPLOAD BOX */}
- <div
+      <div
         onClick={() =>
-          document
-            .getElementById(
-              'splitInput'
-            )
-            .click()
+          inputRef.current?.click()
         }
 
-        onDragOver={(e) =>
-          e.preventDefault()
-        }
-
-        onDrop={async (e) => {
+        onDragOver={(e) => {
 
           e.preventDefault();
 
-          const droppedFile =
-            e.dataTransfer
-              .files[0];
-
-          await handleFile(
-            droppedFile
-          );
+          setIsDragOver(true);
         }}
 
-        className="border-2 border-dashed border-gray-700 hover:border-red-500 transition rounded-3xl p-12 cursor-pointer bg-gray-900"
+        onDragLeave={() =>
+          setIsDragOver(false)
+        }
+
+        onDrop={handleDrop}
+
+        className={`border-2 border-dashed rounded-3xl p-14 cursor-pointer transition-all duration-200 ${
+          isDragOver
+            ? 'border-red-500 bg-red-500/5'
+            : 'border-gray-700 bg-gray-900 hover:border-gray-500'
+        }`}
       >
 
         <input
-          id="splitInput"
+          ref={inputRef}
           type="file"
+          multiple
           accept="application/pdf"
           className="hidden"
 
           onChange={async (e) => {
 
-            const selectedFile =
-              e.target.files[0];
+            const selectedFiles =
+              Array.from(
+                e.target.files
+              );
 
-            await handleFile(
-              selectedFile
+            await addFiles(
+              selectedFiles
             );
           }}
         />
 
-        <div className="text-6xl mb-4">
+        <div className="text-6xl mb-5">
           📄
         </div>
 
-        <p className="text-xl text-white font-medium">
-          Drag & drop PDF here
+        <p className="text-2xl font-semibold text-white mb-2">
+          Drag & drop PDFs here
         </p>
 
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-gray-500 text-sm">
           Fast • Secure • Local Processing
         </p>
 
@@ -519,12 +518,12 @@ export default function MergePDF() {
 
         {loading
           ? 'Merging PDFs...'
-          : `Merge ${files.length} PDF${files.length > 1 ? 's' : ''}`}
+          : `Merge ${files.length} PDF${files.length !== 1 ? 's' : ''}`}
 
       </button>
 
       {/* FOOTER */}
-      <div className="flex justify-center gap-6 mt-10 text-gray-600 text-xs">
+      <div className="flex justify-center gap-8 mt-10 text-gray-500 text-sm">
 
         <div>
           🔒 Local Processing
