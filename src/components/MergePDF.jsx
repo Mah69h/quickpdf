@@ -21,6 +21,10 @@ import { CSS } from '@dnd-kit/utilities';
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+// ─────────────────────────────────────────────
+// SORTABLE ITEM
+// ─────────────────────────────────────────────
+
 function SortableItem({
   fileData,
   index,
@@ -38,7 +42,8 @@ function SortableItem({
   });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform:
+      CSS.Transform.toString(transform),
     transition
   };
 
@@ -47,7 +52,7 @@ function SortableItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between bg-gray-900 border border-gray-800 p-4 rounded-2xl shadow-md"
+      className="flex items-center justify-between bg-gray-900 border border-gray-800 rounded-2xl p-4"
     >
 
       <div
@@ -59,18 +64,21 @@ function SortableItem({
         <img
           src={fileData.thumbnail}
           alt="PDF Preview"
-          className="w-16 h-20 object-cover rounded-xl border border-gray-700"
+          className="w-20 h-28 object-cover rounded-lg border border-gray-700"
         />
 
-        <div className="text-left min-w-0">
+        <div className="text-left flex-1 min-w-0">
 
-          <p className="text-white text-sm font-medium truncate">
+          <p className="text-white font-medium truncate">
             {fileData.file.name}
           </p>
 
-          <p className="text-gray-400 text-xs mt-1">
+          <p className="text-gray-500 text-sm mt-1">
 
-            {(fileData.file.size / (1024 * 1024)).toFixed(2)} MB
+            {(
+              fileData.file.size /
+              (1024 * 1024)
+            ).toFixed(2)} MB
 
             {fileData.pageCount && (
               <> • {fileData.pageCount} pages</>
@@ -83,8 +91,10 @@ function SortableItem({
       </div>
 
       <button
-        onClick={() => removeFile(index)}
-        className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl text-white transition ml-3 text-sm"
+        onClick={() =>
+          removeFile(index)
+        }
+        className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl text-white transition ml-4"
       >
         Remove
       </button>
@@ -93,15 +103,23 @@ function SortableItem({
   );
 }
 
+// ─────────────────────────────────────────────
+// MAIN COMPONENT
+// ─────────────────────────────────────────────
+
 export default function MergePDF() {
 
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] =
+    useState([]);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] =
+    useState(false);
 
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] =
+    useState(0);
 
-  const [isDragOver, setIsDragOver] = useState(false);
+  const [isDragOver, setIsDragOver] =
+    useState(false);
 
   const inputRef = useRef(null);
 
@@ -109,134 +127,142 @@ export default function MergePDF() {
   // GENERATE THUMBNAIL
   // ─────────────────────────────────────────────
 
-  const generateThumbnail = async (file) => {
+  const generateThumbnail =
+    async (file) => {
 
-    const buffer = await file.arrayBuffer();
+      const buffer =
+        await file.arrayBuffer();
 
-    const typedArray =
-      new Uint8Array(buffer);
+      const typedArray =
+        new Uint8Array(buffer);
 
-    const pdf =
-      await pdfjsLib.getDocument({
-        data: typedArray
+      const pdf =
+        await pdfjsLib.getDocument({
+          data: typedArray
+        }).promise;
+
+      const page =
+        await pdf.getPage(1);
+
+      const viewport =
+        page.getViewport({
+          scale: 0.35
+        });
+
+      const canvas =
+        document.createElement('canvas');
+
+      const context =
+        canvas.getContext('2d');
+
+      canvas.width =
+        viewport.width;
+
+      canvas.height =
+        viewport.height;
+
+      await page.render({
+        canvasContext: context,
+        viewport
       }).promise;
 
-    const page =
-      await pdf.getPage(1);
-
-    const viewport =
-      page.getViewport({
-        scale: 0.35
-      });
-
-    const canvas =
-      document.createElement('canvas');
-
-    const context =
-      canvas.getContext('2d');
-
-    canvas.height = viewport.height;
-
-    canvas.width = viewport.width;
-
-    await page.render({
-      canvasContext: context,
-      viewport
-    }).promise;
-
-    const blob =
-      await new Promise((resolve) =>
-        canvas.toBlob(
-          resolve,
+      const thumbnail =
+        canvas.toDataURL(
           'image/jpeg',
-          0.6
-        )
-      );
+          0.7
+        );
 
-    const thumbnail =
-      URL.createObjectURL(blob);
-
-    return {
-      thumbnail,
-      buffer,
-      pageCount: pdf.numPages
+      return {
+        thumbnail,
+        buffer,
+        pageCount: pdf.numPages
+      };
     };
-  };
 
   // ─────────────────────────────────────────────
   // ADD FILES
   // ─────────────────────────────────────────────
 
-  const addFiles = async (newFiles) => {
+  const addFiles =
+    async (newFiles) => {
 
-    const pdfFiles =
-      newFiles.filter(
-        (file) =>
-          file.type === 'application/pdf'
-      );
+      const pdfFiles =
+        newFiles.filter(
+          (file) =>
+            file.type ===
+            'application/pdf'
+        );
 
-    for (const file of pdfFiles) {
+      for (const file of pdfFiles) {
 
-      try {
+        try {
 
-        const {
-          thumbnail,
-          buffer,
-          pageCount
-        } =
-          await generateThumbnail(file);
-
-        const newItem = {
-
-          id: crypto.randomUUID(),
-
-          file,
-
-          thumbnail,
-
-          buffer,
-
-          pageCount
-        };
-
-        setFiles((prev) => {
-
-          const alreadyExists =
-            prev.some(
+          const exists =
+            files.some(
               (item) =>
-                item.file.name === file.name &&
-                item.file.size === file.size
+                item.file.name ===
+                  file.name &&
+                item.file.size ===
+                  file.size
             );
 
-          if (alreadyExists) return prev;
+          if (exists) continue;
 
-          return [...prev, newItem];
-        });
+          const {
+            thumbnail,
+            buffer,
+            pageCount
+          } =
+            await generateThumbnail(
+              file
+            );
 
-      } catch (err) {
+          const newItem = {
 
-        console.error(err);
+            id:
+              crypto.randomUUID(),
+
+            file,
+
+            thumbnail,
+
+            buffer,
+
+            pageCount
+          };
+
+          setFiles((prev) => [
+            ...prev,
+            newItem
+          ]);
+
+        } catch (err) {
+
+          console.error(err);
+        }
       }
-    }
-  };
+    };
 
   // ─────────────────────────────────────────────
   // DROP HANDLER
   // ─────────────────────────────────────────────
 
-  const handleDrop = async (e) => {
+  const handleDrop =
+    async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    setIsDragOver(false);
+      setIsDragOver(false);
 
-    const droppedFiles =
-      Array.from(
-        e.dataTransfer.files
+      const droppedFiles =
+        Array.from(
+          e.dataTransfer.files
+        );
+
+      await addFiles(
+        droppedFiles
       );
-
-    await addFiles(droppedFiles);
-  };
+    };
 
   // ─────────────────────────────────────────────
   // REMOVE FILE
@@ -244,150 +270,176 @@ export default function MergePDF() {
 
   const removeFile = (index) => {
 
-    URL.revokeObjectURL(
-      files[index].thumbnail
-    );
-
     const updated =
-      files.filter((_, i) => i !== index);
+      files.filter(
+        (_, i) => i !== index
+      );
 
     setFiles(updated);
   };
 
   // ─────────────────────────────────────────────
-  // DRAG END
+  // DRAG SORT
   // ─────────────────────────────────────────────
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd =
+    (event) => {
 
-    const {
-      active,
-      over
-    } = event;
+      const {
+        active,
+        over
+      } = event;
 
-    if (!over || active.id === over.id)
-      return;
+      if (
+        !over ||
+        active.id === over.id
+      ) {
+        return;
+      }
 
-    const oldIndex =
-      files.findIndex(
-        (item) => item.id === active.id
+      const oldIndex =
+        files.findIndex(
+          (item) =>
+            item.id === active.id
+        );
+
+      const newIndex =
+        files.findIndex(
+          (item) =>
+            item.id === over.id
+        );
+
+      setFiles(
+        arrayMove(
+          files,
+          oldIndex,
+          newIndex
+        )
       );
-
-    const newIndex =
-      files.findIndex(
-        (item) => item.id === over.id
-      );
-
-    setFiles(
-      arrayMove(
-        files,
-        oldIndex,
-        newIndex
-      )
-    );
-  };
+    };
 
   // ─────────────────────────────────────────────
   // MERGE PDFs
   // ─────────────────────────────────────────────
 
-  const mergePDFs = async () => {
+  const mergePDFs =
+    async () => {
 
-    if (files.length === 0)
-      return;
+      if (files.length === 0)
+        return;
 
-    try {
+      try {
 
-      setLoading(true);
+        setLoading(true);
 
-      setProgress(0);
+        setProgress(0);
 
-      const mergedPdf =
-        await PDFDocument.create();
+        const mergedPdf =
+          await PDFDocument.create();
 
-      for (let i = 0; i < files.length; i++) {
+        for (
+          let i = 0;
+          i < files.length;
+          i++
+        ) {
 
-        const item = files[i];
+          const item =
+            files[i];
 
-        const pdf =
-          await PDFDocument.load(
-            item.buffer,
+          const pdf =
+            await PDFDocument.load(
+              item.buffer,
+              {
+                ignoreEncryption: true
+              }
+            );
+
+          const copiedPages =
+            await mergedPdf.copyPages(
+              pdf,
+              pdf.getPageIndices()
+            );
+
+          copiedPages.forEach(
+            (page) =>
+              mergedPdf.addPage(
+                page
+              )
+          );
+
+          setProgress(
+            Math.round(
+              ((i + 1) /
+                files.length) *
+                100
+            )
+          );
+        }
+
+        const mergedBytes =
+          await mergedPdf.save();
+
+        const blob =
+          new Blob(
+            [mergedBytes],
             {
-              ignoreEncryption: true
+              type:
+                'application/pdf'
             }
           );
 
-        const pages =
-          await mergedPdf.copyPages(
-            pdf,
-            pdf.getPageIndices()
+        const url =
+          URL.createObjectURL(
+            blob
           );
 
-        pages.forEach((page) =>
-          mergedPdf.addPage(page)
+        const a =
+          document.createElement(
+            'a'
+          );
+
+        a.href = url;
+
+        a.download =
+          'quickpdf-merged.pdf';
+
+        a.click();
+
+        setTimeout(() => {
+
+          URL.revokeObjectURL(
+            url
+          );
+
+        }, 5000);
+
+      } catch (err) {
+
+        console.error(err);
+
+        alert(
+          'Failed to merge PDFs'
         );
 
-        setProgress(
-          Math.round(
-            ((i + 1) / files.length) * 100
-          )
-        );
+      } finally {
+
+        setLoading(false);
+
+        setProgress(0);
       }
+    };
 
-      const mergedBytes =
-        await mergedPdf.save();
-
-      const blob =
-        new Blob(
-          [mergedBytes],
-          {
-            type:
-              'application/pdf'
-          }
-        );
-
-      const url =
-        URL.createObjectURL(blob);
-
-      const a =
-        document.createElement('a');
-
-      a.href = url;
-
-      a.download =
-        'quickpdf-merged.pdf';
-
-      a.click();
-
-      setTimeout(() => {
-
-        URL.revokeObjectURL(url);
-
-      }, 5000);
-
-    } catch (err) {
-
-      console.error(err);
-
-      alert(
-        'Failed to merge PDFs'
-      );
-
-    } finally {
-
-      setLoading(false);
-
-      setProgress(0);
-    }
-  };
+  // ─────────────────────────────────────────────
+  // UI
+  // ─────────────────────────────────────────────
 
   return (
 
-    <div className="w-full max-w-3xl mx-auto text-center px-4">
+    <div className="w-full max-w-2xl mx-auto text-center">
 
       {/* HEADER */}
 
-      <h2 className="text-5xl font-bold mb-10 text-white">
+      <h2 className="text-3xl font-bold text-white mb-6">
         Merge PDF
       </h2>
 
@@ -411,10 +463,10 @@ export default function MergePDF() {
 
         onDrop={handleDrop}
 
-        className={`border-2 border-dashed rounded-3xl p-14 cursor-pointer transition-all duration-200 ${
+        className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
           isDragOver
-            ? 'border-red-500 bg-red-500/5'
-            : 'border-gray-700 bg-gray-900 hover:border-gray-500'
+            ? 'border-red-500 bg-gray-900'
+            : 'border-gray-700 bg-gray-900 hover:border-red-500'
         }`}
       >
 
@@ -438,15 +490,15 @@ export default function MergePDF() {
           }}
         />
 
-        <div className="text-6xl mb-5">
+        <div className="text-6xl mb-4">
           📄
         </div>
 
-        <p className="text-2xl font-semibold text-white mb-2">
+        <p className="text-xl text-white font-medium">
           Drag & drop PDFs here
         </p>
 
-        <p className="text-gray-500 text-sm">
+        <p className="text-sm text-gray-500 mt-2">
           Fast • Secure • Local Processing
         </p>
 
@@ -454,57 +506,60 @@ export default function MergePDF() {
 
       {/* FILE LIST */}
 
-      <div className="mt-6 space-y-4">
+      {files.length > 0 && (
 
-        <DndContext
-          collisionDetection={
-            closestCenter
-          }
+        <div className="mt-6 space-y-4">
 
-          onDragEnd={
-            handleDragEnd
-          }
-        >
+          <DndContext
+            collisionDetection={
+              closestCenter
+            }
 
-          <SortableContext
-            items={files.map(
-              (f) => f.id
-            )}
-
-            strategy={
-              verticalListSortingStrategy
+            onDragEnd={
+              handleDragEnd
             }
           >
 
-            {files.map(
-              (
-                fileData,
-                index
-              ) => (
+            <SortableContext
+              items={files.map(
+                (f) => f.id
+              )}
 
-                <SortableItem
-                  key={
-                    fileData.id
-                  }
+              strategy={
+                verticalListSortingStrategy
+              }
+            >
 
-                  fileData={
-                    fileData
-                  }
+              {files.map(
+                (
+                  fileData,
+                  index
+                ) => (
 
-                  index={index}
+                  <SortableItem
+                    key={
+                      fileData.id
+                    }
 
-                  removeFile={
-                    removeFile
-                  }
-                />
-              )
-            )}
+                    fileData={
+                      fileData
+                    }
 
-          </SortableContext>
+                    index={index}
 
-        </DndContext>
+                    removeFile={
+                      removeFile
+                    }
+                  />
+                )
+              )}
 
-      </div>
+            </SortableContext>
+
+          </DndContext>
+
+        </div>
+      )}
 
       {/* PROGRESS */}
 
@@ -517,14 +572,17 @@ export default function MergePDF() {
             <div
               className="bg-red-600 h-full transition-all duration-300"
               style={{
-                width: `${progress}%`
+                width:
+                  `${progress}%`
               }}
             />
 
           </div>
 
           <p className="text-gray-400 text-sm mt-2">
-            Merging... {progress}%
+            Merging...
+            {' '}
+            {progress}%
           </p>
 
         </div>
@@ -532,32 +590,31 @@ export default function MergePDF() {
 
       {/* BUTTON */}
 
-      <button
+      {files.length > 0 && (
 
-        onClick={mergePDFs}
+        <button
 
-        disabled={
-          loading ||
-          files.length === 0
-        }
+          onClick={mergePDFs}
 
-        className={`mt-8 px-10 py-4 rounded-2xl text-white text-lg font-semibold transition-all duration-200 ${
-          loading ||
-          files.length === 0
-            ? 'bg-gray-500 cursor-not-allowed'
-            : 'bg-red-600 hover:bg-red-700 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-red-500/20'
-        }`}
-      >
+          disabled={loading}
 
-        {loading
-          ? 'Merging PDFs...'
-          : `Merge ${files.length} PDF${files.length !== 1 ? 's' : ''}`}
+          className={`w-full mt-6 py-4 rounded-2xl text-white font-medium transition ${
+            loading
+              ? 'bg-gray-700 cursor-not-allowed'
+              : 'bg-red-600 hover:bg-red-700'
+          }`}
+        >
 
-      </button>
+          {loading
+            ? 'Processing...'
+            : `Merge ${files.length} PDF${files.length !== 1 ? 's' : ''}`}
+
+        </button>
+      )}
 
       {/* FOOTER */}
 
-      <div className="flex flex-wrap justify-center gap-6 mt-10 text-gray-500 text-sm">
+      <div className="flex justify-center gap-6 mt-10 text-gray-600 text-xs">
 
         <div>
           🔒 Local Processing
