@@ -347,67 +347,66 @@ export default function SplitPDF() {
         Split PDF
       </h2>
 
-      {/* UPLOAD BOX */}
+     {/* UPLOAD BOX */}
 
-      <div
-        onClick={() =>
-          document
-            .getElementById(
-              'splitInput'
-            )
-            .click()
-        }
+<div
+  onClick={() =>
+    inputRef.current?.click()
+  }
 
-        onDragOver={(e) =>
-          e.preventDefault()
-        }
+  onDragOver={(e) => {
 
-        onDrop={async (e) => {
+    e.preventDefault();
 
-          e.preventDefault();
+    setIsDragOver(true);
+  }}
 
-          const droppedFile =
-            e.dataTransfer
-              .files[0];
+  onDragLeave={() =>
+    setIsDragOver(false)
+  }
 
-          await handleFile(
-            droppedFile
-          );
-        }}
+  onDrop={handleDrop}
 
-        className="border-2 border-dashed border-gray-700 hover:border-red-500 transition rounded-3xl p-12 cursor-pointer bg-gray-900"
-      >
+  className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
+    isDragOver
+      ? 'border-red-500 bg-gray-900'
+      : 'border-gray-700 bg-gray-900 hover:border-red-500'
+  }`}
+>
 
-        <input
-          id="splitInput"
-          type="file"
-          accept="application/pdf"
-          className="hidden"
+  <input
+    ref={inputRef}
+    type="file"
+    multiple
+    accept="application/pdf"
+    className="hidden"
 
-          onChange={async (e) => {
+    onChange={async (e) => {
 
-            const selectedFile =
-              e.target.files[0];
+      const selectedFiles =
+        Array.from(
+          e.target.files
+        );
 
-            await handleFile(
-              selectedFile
-            );
-          }}
-        />
+      await addFiles(
+        selectedFiles
+      );
+    }}
+  />
 
-        <div className="text-6xl mb-4">
-          📄
-        </div>
+  <div className="text-6xl mb-4">
+    📄
+  </div>
 
-        <p className="text-xl text-white font-medium">
-          Drag & drop PDF here
-        </p>
+  <p className="text-xl text-white font-medium">
+    Drag & drop PDFs here
+  </p>
 
-        <p className="text-sm text-gray-500 mt-2">
-          Fast • Secure • Local Processing
-        </p>
+  <p className="text-sm text-gray-500 mt-2">
+    Fast • Secure • Local Processing
+  </p>
 
-      </div>
+</div>
 
       {/* FILE PREVIEW */}
 
