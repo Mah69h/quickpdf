@@ -80,11 +80,14 @@ app.post('/compress', upload.single('file'), (req, res) => {
       settings[level];
 
     // Ghostscript path
-    const gsPath =
-      `"C:\\Program Files\\gs\\gs10.07.0\\bin\\gswin64c.exe"`;
+   const isProduction =
+  process.env.RENDER === 'true';
 
-    // Improved command
-    const command = `gs
+const gsPath = isProduction
+  ? 'gs'
+  : '"C:\\Program Files\\gs\\gs10.07.0\\bin\\gswin64c.exe"';
+
+const command = `
 ${gsPath}
 -sDEVICE=pdfwrite
 -dCompatibilityLevel=1.4

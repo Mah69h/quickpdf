@@ -76,6 +76,7 @@ export default function CompressPDF() {
         'level',
         level
       );
+      console.log("API:", import.meta.env.VITE_API_URL);
 
      const response =
   await fetch(
