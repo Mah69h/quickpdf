@@ -1,143 +1,374 @@
-import { useState } from 'react';
-import { PDFDocument } from 'pdf-lib';
+import { useState, useRef } from 'react';
 
 export default function CompressPDF() {
+
   const [file, setFile] = useState(null);
+
   const [loading, setLoading] = useState(false);
+
   const [result, setResult] = useState(null);
-  const [level, setLevel] = useState("screen");
 
-const compressPDF = async (file) => {
-  if (!file) return;
+  const [level, setLevel] = useState('ebook');
 
-  setLoading(true);
+  const [isDragOver, setIsDragOver] = useState(false);
 
- const formData = new FormData();
-formData.append('file', file);
-formData.append('level', level);
+  const inputRef = useRef(null);
 
-  try {
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    const response = await fetch('https://quickpdf-d77h.onrender.com/compress', {
-      method: 'POST',
-      body: formData,
-    });
+  // FORMAT SIZE
+  const formatSize = (bytes) => {
 
-    const blob = await res.blob();
-    const originalSize = file.size;
-const compressedSize = blob.size;
+    if (bytes < 1024 * 1024) {
+      return `${(bytes / 1024).toFixed(1)} KB`;
+    }
 
-const reduction = (
-  ((originalSize - compressedSize) / originalSize) * 100
-).toFixed(1);
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  };
 
-setResult({
-  original: originalSize,
-  compressed: compressedSize,
-  reduction,
- });
-    const url = URL.createObjectURL(blob);
+  // HANDLE FILE
+  const handleFile = (selectedFile) => {
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'compressed.pdf';
-    a.click();
+    if (
+      !selectedFile ||
+      selectedFile.type !== 'application/pdf'
+    ) {
 
-  } catch (err) {
-    console.error(err);
-    alert("Compression failed");
-  }
+      alert('Please upload a valid PDF');
 
-  setLoading(false);
-};
+      return;
+    }
+
+    setResult(null);
+
+    setFile(selectedFile);
+  };
+
+  // DROP
+  const handleDrop = (e) => {
+
+    e.preventDefault();
+
+    setIsDragOver(false);
+
+    const droppedFile =
+      e.dataTransfer.files[0];
+
+    handleFile(droppedFile);
+  };
+
+  // COMPRESS
+  const compressPDF = async () => {
+
+    if (!file) return;
+
+    try {
+
+      setLoading(true);
+
+      const formData =
+        new FormData();
+
+      formData.append(
+        'file',
+        file
+      );
+
+      formData.append(
+        'level',
+        level
+      );
+
+      const response =
+        await fetch(
+          'https://quickpdf-d77h.onrender.com/compress',
+          {
+            method: 'POST',
+            body: formData
+          }
+        );
+
+      if (!response.ok) {
+        throw new Error(
+          'Compression failed'
+        );
+      }
+
+      const blob =
+        await response.blob();
+
+      const originalSize =
+        file.size;
+
+      const compressedSize =
+        blob.size;
+
+      const reduction =
+        (
+          (
+            (
+              originalSize -
+              compressedSize
+            ) /
+            originalSize
+          ) * 100
+        ).toFixed(1);
+
+      setResult({
+        original: originalSize,
+        compressed: compressedSize,
+        reduction
+      });
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const a =
+        document.createElement('a');
+
+      a.href = url;
+
+      a.download =
+        'quickpdf-compressed.pdf';
+
+      a.click();
+
+      setTimeout(() => {
+
+        URL.revokeObjectURL(url);
+
+      }, 5000);
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert(
+        'Compression failed'
+      );
+
+    } finally {
+
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="text-center">
-      <h2 className="text-2xl font-semibold mb-6">Compress PDF</h2>
 
-      {/* Upload box */}
+    <div className="w-full max-w-2xl mx-auto text-center">
+
+      {/* HEADER */}
+
+      <h2 className="text-3xl font-bold text-white mb-6">
+        Compress PDF
+      </h2>
+
+      {/* UPLOAD BOX */}
+
       <div
-        onClick={() => document.getElementById('compressInput').click()}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
+        onClick={() =>
+          inputRef.current?.click()
+        }
+
+        onDragOver={(e) => {
+
           e.preventDefault();
-          const droppedFile = e.dataTransfer.files[0];
-          setFile(droppedFile);
+
+          setIsDragOver(true);
         }}
-        className="flex flex-col items-center justify-center border-2 border-dashed border-gray-600 rounded-2xl p-10 cursor-pointer hover:border-blue-400 hover:bg-gray-700/40 transition"
+
+        onDragLeave={() =>
+          setIsDragOver(false)
+        }
+
+        onDrop={handleDrop}
+
+        className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
+          isDragOver
+            ? 'border-red-500 bg-gray-900'
+            : 'border-gray-700 bg-gray-900 hover:border-red-500'
+        }`}
       >
+
         <input
-          id="compressInput"
+          ref={inputRef}
           type="file"
           accept="application/pdf"
           className="hidden"
-          onChange={(e) => {
-            const selectedFile = e.target.files[0];
-            setFile(selectedFile);
-          }}
+
+          onChange={(e) =>
+            handleFile(
+              e.target.files[0]
+            )
+          }
         />
 
-        <div className="text-5xl mb-3">📉</div>
+        <div className="text-6xl mb-4">
+          📉
+        </div>
 
-        <p className="text-lg text-gray-300">
+        <p className="text-xl text-white font-medium">
           Drag & drop PDF here
         </p>
 
         <p className="text-sm text-gray-500 mt-2">
-          or click to browse file
+          Fast • Secure • Local Processing
         </p>
+
       </div>
 
-      {/* File Display */}
-     {result && (
-  <div className="mt-4 bg-green-500/10 border border-green-500/30 rounded-lg p-3 text-green-400 text-sm">
-    Reduced from {(result.original / 1024).toFixed(1)} KB → {(result.compressed / 1024).toFixed(1)} KB  
-    <br />
-    Saved {result.reduction}% space
-  </div>
-)}
+      {/* FILE CARD */}
+
       {file && (
-        <div className="mt-4 flex justify-between items-center bg-gray-700 px-4 py-2 rounded text-sm text-gray-300">
-          <span>📄 {file.name}</span>
+
+        <div className="mt-6 bg-gray-900 border border-gray-800 rounded-2xl p-4 flex items-center justify-between">
+
+          <div className="text-left min-w-0">
+
+            <p className="text-white font-medium truncate">
+              {file.name}
+            </p>
+
+            <p className="text-gray-500 text-sm mt-1">
+              {formatSize(file.size)}
+            </p>
+
+          </div>
 
           <button
-            onClick={() => setFile(null)}
-            className="text-red-400 hover:text-red-300"
+            onClick={() => {
+
+              setFile(null);
+
+              setResult(null);
+            }}
+
+            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl text-white transition"
           >
-            ❌
+            Remove
           </button>
+
         </div>
       )}
 
- <select
-  value={level}
-  onChange={(e) => setLevel(e.target.value)}
-  className="mb-4 px-3 py-2 rounded bg-gray-800 text-white"
->
-  <option value="screen">Extreme Compression</option>
-  <option value="ebook">Recommended</option>
-  <option value="printer">Less Compression</option>
- </select>
+      {/* COMPRESSION LEVEL */}
 
-      {/* Compress Button */}
-      <button
-        onClick={() => compressPDF(file)}
-        disabled={!file || loading}
-        className={`mt-4 px-6 py-2 rounded-lg text-white transition ${
-          !file || loading
-            ? 'bg-gray-500 cursor-not-allowed'
-            : 'bg-purple-500 hover:bg-purple-600'
-        }`}
-      >
-        {loading ? (
-          <>
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            Compressing...
-          </>
-        ) : (
-          "Compress PDF"
-        )}
-      </button>
+      {file && (
+
+        <div className="mt-6">
+
+          <select
+            value={level}
+
+            onChange={(e) =>
+              setLevel(
+                e.target.value
+              )
+            }
+
+            className="w-full bg-gray-900 border border-gray-700 focus:border-red-500 outline-none rounded-2xl px-5 py-4 text-white"
+          >
+
+            <option value="screen">
+              Extreme Compression
+            </option>
+
+            <option value="ebook">
+              Recommended Compression
+            </option>
+
+            <option value="printer">
+              Less Compression
+            </option>
+
+          </select>
+
+        </div>
+      )}
+
+      {/* RESULT */}
+
+      {result && (
+
+        <div className="mt-6 bg-green-500/10 border border-green-500/30 rounded-2xl p-5 text-left">
+
+          <p className="text-green-400 font-medium">
+            Compression Complete
+          </p>
+
+          <div className="mt-3 text-sm text-gray-300 space-y-1">
+
+            <p>
+              Original:
+              {' '}
+              {formatSize(
+                result.original
+              )}
+            </p>
+
+            <p>
+              Compressed:
+              {' '}
+              {formatSize(
+                result.compressed
+              )}
+            </p>
+
+            <p>
+              Reduced:
+              {' '}
+              {result.reduction}%
+            </p>
+
+          </div>
+
+        </div>
+      )}
+
+      {/* BUTTON */}
+
+      {file && (
+
+        <button
+          onClick={compressPDF}
+
+          disabled={loading}
+
+          className={`mt-6 w-full py-4 rounded-2xl text-white font-medium transition flex items-center justify-center gap-2 ${
+            loading
+              ? 'bg-gray-700 cursor-not-allowed'
+              : 'bg-red-600 hover:bg-red-700'
+          }`}
+        >
+
+          {loading ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              Compressing PDF...
+            </>
+          ) : (
+            'Compress PDF'
+          )}
+
+        </button>
+      )}
+
+      {/* FOOTER */}
+
+      <div className="flex justify-center gap-6 mt-10 text-gray-600 text-xs">
+
+        <div>
+          🔒 Local Processing
+        </div>
+
+        <div>
+          ⚡ Smart Compression
+        </div>
+
+        <div>
+          ∞ No Limits
+        </div>
+
+      </div>
+
     </div>
   );
 }
