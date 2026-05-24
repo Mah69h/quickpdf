@@ -80,12 +80,10 @@ app.post('/compress', upload.single('file'), (req, res) => {
       settings[level];
 
     // Ghostscript path
-   const isProduction =
-  process.env.RENDER === 'true';
-
-const gsPath = isProduction
-  ? 'gs'
-  : '"C:\\Program Files\\gs\\gs10.07.0\\bin\\gswin64c.exe"';
+  const gsPath =
+  process.platform === 'win32'
+    ? '"C:\\Program Files\\gs\\gs10.07.0\\bin\\gswin64c.exe"'
+    : 'gs';
 
 const command = `
 ${gsPath}
