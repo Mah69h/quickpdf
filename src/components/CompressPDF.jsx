@@ -77,9 +77,9 @@ export default function CompressPDF() {
         level
       );
 
-      const response =
-        await fetch(
-          'https://quickpdf-d77h.onrender.com/compress',
+     const response =
+  await fetch(
+    `${import.meta.env.VITE_API_URL}/compress`,
           {
             method: 'POST',
             body: formData
@@ -150,6 +150,11 @@ export default function CompressPDF() {
       setLoading(false);
     }
   };
+  const compressionLabel = {
+  screen: 'Maximum compression with lower quality',
+  ebook: 'Best balance between quality and size',
+  printer: 'Highest quality with smaller reduction'
+};
 
   return (
 
@@ -280,6 +285,9 @@ export default function CompressPDF() {
             </option>
 
           </select>
+          <p className="text-sm text-gray-500 mt-2 text-left">
+  {compressionLabel[level]}
+</p>
 
         </div>
       )}

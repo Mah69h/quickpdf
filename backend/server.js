@@ -29,77 +29,188 @@ const upload = multer({ storage });
 
 app.post('/compress', upload.single('file'), (req, res) => {
 
-  console.log("LEVEL:", req.body.level);
+  try {
 
-  const allowedLevels = ['screen', 'ebook', 'printer'];
-
-  const level = allowedLevels.includes(req.body.level)
-    ? req.body.level
-    : 'screen';
-
-  const inputPath = req.file.path;
-
-  const outputPath = `uploads/compressed-${Date.now()}.pdf`;
-
-  // Compression settings
-  const settings = {
-    screen: {
-      resolution: 72,
-      quality: 30,
-    },
-
-    ebook: {
-      resolution: 150,
-      quality: 60,
-    },
-
-    printer: {
-      resolution: 300,
-      quality: 90,
-    },
-  };
-
-  const selected = settings[level];
-
-  // Ghostscript command
-  const command = `"C:\\Program Files\\gs\\gs10.07.0\\bin\\gswin64c.exe" -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/${level} -dDownsampleColorImages=true -dColorImageDownsampleType=/Bicubic -dColorImageResolution=${selected.resolution} -dJPEGQ=${selected.quality} -dNOPAUSE -dQUIET -dBATCH -sOutputFile="${outputPath}" "${inputPath}"`;
-
-  console.log(command);
-
-  exec(command, (err) => {
-    const originalSize = fs.statSync(inputPath).size;
-const compressedSize = fs.statSync(outputPath).size;
-
-// If compression increased size
-if (compressedSize >= originalSize) {
-
-  return res.download(inputPath, 'compressed.pdf', () => {
-
-    if (fs.existsSync(outputPath)) {
-      fs.unlinkSync(outputPath);
+    if (!req.file) {
+      return res.status(400).send('No file uploaded');
     }
 
-    if (fs.existsSync(inputPath)) {
-      fs.unlinkSync(inputPath);
-    }
-  });
-}
+    console.log("LEVEL:", req.body.level);
 
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Compression failed');
-    }
+    const allowedLevels = [
+      'screen',
+      'ebook',
+      'printer'
+    ];
 
-    res.download(outputPath, 'compressed.pdf', () => {
+    const level =
+      allowedLevels.includes(req.body.level)
+        ? req.body.level
+        : 'ebook';
 
-      // Delete temp files
-      fs.unlinkSync(inputPath);
+    const inputPath = req.file.path;
 
-      if (fs.existsSync(outputPath)) {
-        fs.unlinkSync(outputPath);
+    const outputPath =
+      path.join(
+        __dirname,
+        'uploads',
+        `compressed-${Date.now()}.pdf`
+      );
+
+    // Better tuned settings
+    const settings = {
+
+      screen: {
+        resolution: 96,
+        quality: 40
+      },
+
+      ebook: {
+        resolution: 150,
+        quality: 75
+      },
+
+      printer: {
+        resolution: 300,
+        quality: 92
       }
+    };
+
+    const selected =
+      settings[level];
+
+    // Ghostscript path
+    const gsPath =
+      `"C:\\Program Files\\gs\\gs10.07.0\\bin\\gswin64c.exe"`;
+
+    // Improved command
+    const command = `gs
+${gsPath}
+-sDEVICE=pdfwrite
+-dCompatibilityLevel=1.4
+-dPDFSETTINGS=/${level}
+-dNOPAUSE
+-dQUIET
+-dBATCH
+-dDetectDuplicateImages=true
+-dCompressFonts=true
+-dSubsetFonts=true
+-dDownsampleColorImages=true
+-dColorImageDownsampleType=/Bicubic
+-dColorImageResolution=${selected.resolution}
+-dDownsampleGrayImages=true
+-dGrayImageDownsampleType=/Bicubic
+-dGrayImageResolution=${selected.resolution}
+-dDownsampleMonoImages=true
+-dMonoImageResolution=${selected.resolution}
+-dAutoRotatePages=/None
+-dJPEGQ=${selected.quality}
+-sOutputFile="${outputPath}"
+"${inputPath}"
+`;
+
+    console.log(command);
+
+    exec(command, (err) => {
+
+      // ERROR
+      if (err) {
+
+        console.error(err);
+
+        if (fs.existsSync(inputPath)) {
+          fs.unlinkSync(inputPath);
+        }
+
+        return res
+          .status(500)
+          .send('Compression failed');
+      }
+
+      // CHECK OUTPUT EXISTS
+      if (!fs.existsSync(outputPath)) {
+
+        if (fs.existsSync(inputPath)) {
+          fs.unlinkSync(inputPath);
+        }
+
+        return res
+          .status(500)
+          .send('Compressed file not created');
+      }
+
+      const originalSize =
+        fs.statSync(inputPath).size;
+
+      const compressedSize =
+        fs.statSync(outputPath).size;
+
+      console.log(
+        `Original: ${originalSize}`
+      );
+
+      console.log(
+        `Compressed: ${compressedSize}`
+      );
+
+      // IF FILE BECOMES BIGGER
+      if (
+        compressedSize >= originalSize
+      ) {
+
+        console.log(
+          "Compression not effective"
+        );
+
+        return res.download(
+          inputPath,
+          'compressed.pdf',
+          () => {
+
+            if (
+              fs.existsSync(inputPath)
+            ) {
+              fs.unlinkSync(inputPath);
+            }
+
+            if (
+              fs.existsSync(outputPath)
+            ) {
+              fs.unlinkSync(outputPath);
+            }
+          }
+        );
+      }
+
+      // SEND COMPRESSED FILE
+      res.download(
+        outputPath,
+        'compressed.pdf',
+        () => {
+
+          if (
+            fs.existsSync(inputPath)
+          ) {
+            fs.unlinkSync(inputPath);
+          }
+
+          if (
+            fs.existsSync(outputPath)
+          ) {
+            fs.unlinkSync(outputPath);
+          }
+        }
+      );
     });
-  });
+
+  } catch (err) {
+
+    console.error(err);
+
+    return res
+      .status(500)
+      .send('Server error');
+  }
 });
 app.post('/word-to-pdf', upload.single('file'), (req, res) => {
 
