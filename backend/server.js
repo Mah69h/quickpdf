@@ -106,12 +106,10 @@ ${gsPath}
 -dGrayImageResolution=${selected.resolution}
 -dDownsampleMonoImages=true
 -dMonoImageResolution=${selected.resolution}
--dAutoRotatePages=/None
 -dJPEGQ=${selected.quality}
 -sOutputFile="${outputPath}"
 "${inputPath}"
 `;
-
     console.log(command);
 
     exec(command, (err) => {
