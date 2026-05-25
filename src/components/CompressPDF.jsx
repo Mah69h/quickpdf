@@ -77,15 +77,16 @@ export default function CompressPDF() {
         level
       );
       console.log("API:", import.meta.env.VITE_API_URL);
-
-     const response =
-  await fetch(
-    `${import.meta.env.VITE_API_URL}/compress`,
-          {
-            method: 'POST',
-            body: formData
-          }
-        );
+      console.log("FETCH STARTING");
+  const response = await fetch(
+  'https://quickpdf-2qeo.onrender.com/compress',
+  {
+    method: 'POST',
+    body: formData,
+    mode: 'cors'
+  }
+);
+console.log("FETCH RESPONSE", response);
         console.log(response);
 
       if (!response.ok) {
