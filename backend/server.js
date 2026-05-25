@@ -10,7 +10,18 @@ if (!fs.existsSync('uploads')) {
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('UNHANDLED REJECTION:', err);
+});
 
 const storage = multer.diskStorage({
 
@@ -31,6 +42,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.post('/compress', upload.single('file'), (req, res) => {
+  console.log("COMPRESS ROUTE HIT");
 
   try {
 

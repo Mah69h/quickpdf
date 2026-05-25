@@ -1,7 +1,6 @@
 FROM node:20
 
-RUN apt-get update && \
-    apt-get install -y ghostscript libreoffice
+RUN apt-get update && apt-get install -y ghostscript libreoffice
 
 WORKDIR /app
 
