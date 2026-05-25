@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 
 export default function CompressPDF() {
 
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -25,22 +25,28 @@ export default function CompressPDF() {
   };
 
   // HANDLE FILE
-  const handleFile = (selectedFile) => {
+  const handleFile = (selectedFiles) => {
 
-    if (
-      !selectedFile ||
-      selectedFile.type !== 'application/pdf'
-    ) {
+  const pdfFiles =
+    Array.from(selectedFiles).filter(
+      (file) =>
+        file.type === 'application/pdf'
+    );
 
-      alert('Please upload a valid PDF');
+  if (pdfFiles.length === 0) {
 
-      return;
-    }
+    alert('Please upload valid PDFs');
 
-    setResult(null);
+    return;
+  }
 
-    setFile(selectedFile);
-  };
+  setResult(null);
+
+  setFiles((prev) => [
+    ...prev,
+    ...pdfFiles
+  ]);
+};
 
   // DROP
   const handleDrop = (e) => {
@@ -49,16 +55,13 @@ export default function CompressPDF() {
 
     setIsDragOver(false);
 
-    const droppedFile =
-      e.dataTransfer.files[0];
-
-    handleFile(droppedFile);
+    handleFile(e.dataTransfer.files);
   };
 
   // COMPRESS
   const compressPDF = async () => {
 
-    if (!file) return;
+    if (files.length === 0) return;
 
     try {
 
@@ -67,17 +70,16 @@ export default function CompressPDF() {
       const formData =
         new FormData();
 
-      formData.append(
+       formData.append(
         'file',
-        file
-      );
+         files[0]
+  );
 
       formData.append(
         'level',
         level
       );
-      console.log("API:", import.meta.env.VITE_API_URL);
-      console.log("FETCH STARTING");
+     
   const response = await fetch(
   'https://quickpdf-2qeo.onrender.com/compress',
   {
@@ -86,8 +88,6 @@ export default function CompressPDF() {
     mode: 'cors'
   }
 );
-console.log("FETCH RESPONSE", response);
-        console.log(response);
 
       if (!response.ok) {
         throw new Error(
@@ -99,7 +99,7 @@ console.log("FETCH RESPONSE", response);
         await response.blob();
 
       const originalSize =
-        file.size;
+         files[0].size;
 
       const compressedSize =
         blob.size;
@@ -171,95 +171,123 @@ console.log("FETCH RESPONSE", response);
 
       {/* UPLOAD BOX */}
 
-      <div
-        onClick={() =>
-          inputRef.current?.click()
-        }
+     {files.length === 0 && (
 
-        onDragOver={(e) => {
+  <div
+    onClick={() =>
+      inputRef.current?.click()
+    }
 
-          e.preventDefault();
+    onDragOver={(e) => {
 
-          setIsDragOver(true);
-        }}
+      e.preventDefault();
 
-        onDragLeave={() =>
-          setIsDragOver(false)
-        }
+      setIsDragOver(true);
+    }}
 
-        onDrop={handleDrop}
+    onDragLeave={() =>
+      setIsDragOver(false)
+    }
 
-        className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
-          isDragOver
-            ? 'border-red-500 bg-gray-900'
-            : 'border-gray-700 bg-gray-900 hover:border-red-500'
-        }`}
-      >
+    onDrop={handleDrop}
 
-        <input
-          ref={inputRef}
-          type="file"
-          accept="application/pdf"
-          className="hidden"
+    className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition ${
+      isDragOver
+        ? 'border-red-500 bg-gray-900'
+        : 'border-gray-700 bg-gray-900 hover:border-red-500'
+    }`}
+  >
 
-          onChange={(e) =>
-            handleFile(
-              e.target.files[0]
-            )
-          }
-        />
+    <input
+      ref={inputRef}
+      type="file"
+      multiple
+      accept="application/pdf"
+      className="hidden"
 
-        <div className="text-6xl mb-4">
-          📉
-        </div>
+      onChange={(e) =>
+        handleFile(
+          e.target.files
+        )
+      }
+    />
 
-        <p className="text-xl text-white font-medium">
-          Drag & drop PDF here
-        </p>
+    <div className="text-6xl mb-4">
+      📉
+    </div>
 
-        <p className="text-sm text-gray-500 mt-2">
-          Fast • Secure • Local Processing
-        </p>
+    <p className="text-xl text-white font-medium">
+      Drag & drop PDFs here
+    </p>
 
-      </div>
+    <p className="text-sm text-gray-500 mt-2">
+      Fast • Secure • Local Processing
+    </p>
+
+  </div>
+)}
 
       {/* FILE CARD */}
 
-      {file && (
+     {files.length > 0 && (
 
-        <div className="mt-6 bg-gray-900 border border-gray-800 rounded-2xl p-4 flex items-center justify-between">
+  <div className="mt-6 space-y-3">
 
-          <div className="text-left min-w-0">
+    {files.map((file, index) => (
 
-            <p className="text-white font-medium truncate">
-              {file.name}
-            </p>
+      <div
+        key={index}
+        className="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex items-center justify-between"
+      >
 
-            <p className="text-gray-500 text-sm mt-1">
-              {formatSize(file.size)}
-            </p>
+        <div className="text-left min-w-0">
 
-          </div>
+          <p className="text-white font-medium truncate">
+            {file.name}
+          </p>
 
-          <button
-            onClick={() => {
-
-              setFile(null);
-
-              setResult(null);
-            }}
-
-            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl text-white transition"
-          >
-            Remove
-          </button>
+          <p className="text-gray-500 text-sm mt-1">
+            {formatSize(file.size)}
+          </p>
 
         </div>
-      )}
+
+        <button
+          onClick={() => {
+
+            setFiles(
+              files.filter(
+                (_, i) => i !== index
+              )
+            );
+          }}
+
+          className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl text-white transition"
+        >
+          Remove
+        </button>
+
+      </div>
+    ))}
+
+    {/* ADD MORE */}
+
+    <button
+      onClick={() =>
+        inputRef.current?.click()
+      }
+
+      className="w-full border-2 border-dashed border-gray-700 hover:border-red-500 rounded-2xl py-5 text-gray-400 hover:text-white transition text-3xl"
+    >
+      +
+    </button>
+
+  </div>
+)}
 
       {/* COMPRESSION LEVEL */}
 
-      {file && (
+      {files.length > 0 && (
 
         <div className="mt-6">
 
@@ -336,7 +364,7 @@ console.log("FETCH RESPONSE", response);
 
       {/* BUTTON */}
 
-      {file && (
+      {files.length > 0 && (
 
         <button
           onClick={compressPDF}
