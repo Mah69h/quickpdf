@@ -4,6 +4,9 @@ const cors = require('cors');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads');
+}
 
 const app = express();
 
@@ -85,32 +88,34 @@ app.post('/compress', upload.single('file'), (req, res) => {
     ? '"C:\\Program Files\\gs\\gs10.07.0\\bin\\gswin64c.exe"'
     : 'gs';
 
-const command = `
-${gsPath}
--sDEVICE=pdfwrite
--dCompatibilityLevel=1.4
--dPDFSETTINGS=/${level}
--dNOPAUSE
--dQUIET
--dBATCH
--dDetectDuplicateImages=true
--dCompressFonts=true
--dSubsetFonts=true
--dDownsampleColorImages=true
--dColorImageDownsampleType=/Bicubic
--dColorImageResolution=${selected.resolution}
--dDownsampleGrayImages=true
--dGrayImageDownsampleType=/Bicubic
--dGrayImageResolution=${selected.resolution}
--dDownsampleMonoImages=true
--dMonoImageResolution=${selected.resolution}
--dJPEGQ=${selected.quality}
--sOutputFile="${outputPath}"
-"${inputPath}"
-`;
+const command = `${gsPath} \
+-sDEVICE=pdfwrite \
+-dCompatibilityLevel=1.4 \
+-dPDFSETTINGS=/${level} \
+-dNOPAUSE \
+-dQUIET \
+-dBATCH \
+-dDetectDuplicateImages=true \
+-dCompressFonts=true \
+-dSubsetFonts=true \
+-dDownsampleColorImages=true \
+-dColorImageDownsampleType=/Bicubic \
+-dColorImageResolution=${selected.resolution} \
+-dDownsampleGrayImages=true \
+-dGrayImageDownsampleType=/Bicubic \
+-dGrayImageResolution=${selected.resolution} \
+-dDownsampleMonoImages=true \
+-dMonoImageResolution=${selected.resolution} \
+-dJPEGQ=${selected.quality} \
+-sOutputFile="${outputPath}" \
+"${inputPath}"`;
+
     console.log(command);
 
-    exec(command, (err) => {
+    exec(command, (err, stdout, stderr) => {
+
+  console.log("STDOUT:", stdout);
+  console.log("STDERR:", stderr);
 
       // ERROR
       if (err) {
