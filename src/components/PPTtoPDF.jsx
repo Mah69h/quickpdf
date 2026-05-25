@@ -18,10 +18,11 @@ export default function PowerPointtoPDF() {
     try {
 
       const res = await fetch(
-        'https://quickpdf-d77h.onrender.com/ppt-to-pdf',
+        'https://quickpdf-2qeo.onrender.com/ppt-to-pdf',
         {
           method: 'POST',
           body: formData,
+          mode: 'cors'
         }
       );
 

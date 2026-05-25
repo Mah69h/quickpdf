@@ -18,10 +18,11 @@ export default function ExcelToPDF() {
     try {
 
       const res = await fetch(
-        'https://quickpdf-d77h.onrender.com/excel-to-pdf',
+        'https://quickpdf-2qeo.onrender.com/excel-to-pdf',
         {
           method: 'POST',
           body: formData,
+          mode: 'cors'
         }
       );
 

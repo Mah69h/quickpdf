@@ -19,10 +19,11 @@ export default function PDFtoWORD() {
     try {
 
       const res = await fetch(
-        'https://quickpdf-d77h.onrender.com/pdf-to-word',
+        'https://quickpdf-2qeo.onrender.com/pdf-to-word',
         {
           method: 'POST',
           body: formData,
+          mode: 'cors'
         }
       );
 
