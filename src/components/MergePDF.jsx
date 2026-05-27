@@ -213,7 +213,7 @@ const addFiles = async (newFiles) => {
 
       const newItem = {
 
-        id: crypto.randomUUID(),
+        id: Date.now() + Math.random(),
 
         file,
 
