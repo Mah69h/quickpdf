@@ -183,65 +183,58 @@ export default function MergePDF() {
   // ADD FILES
   // ─────────────────────────────────────────────
 
-  const addFiles =
-    async (newFiles) => {
+  const addFiles = async (newFiles) => {
 
-      const pdfFiles =
-        newFiles.filter(
-          (file) =>
-            file.type ===
-            'application/pdf'
+  const pdfFiles =
+    Array.from(newFiles).filter(
+      (file) =>
+        file.type === 'application/pdf'
+    );
+
+  for (const file of pdfFiles) {
+
+    try {
+
+      const exists =
+        files.some(
+          (item) =>
+            item.file.name === file.name &&
+            item.file.size === file.size
         );
 
-      for (const file of pdfFiles) {
+      if (exists) continue;
 
-        try {
+      const {
+        thumbnail,
+        buffer,
+        pageCount
+      } =
+        await generateThumbnail(file);
 
-          const exists =
-            files.some(
-              (item) =>
-                item.file.name ===
-                  file.name &&
-                item.file.size ===
-                  file.size
-            );
+      const newItem = {
 
-          if (exists) continue;
+        id: crypto.randomUUID(),
 
-          const {
-            thumbnail,
-            buffer,
-            pageCount
-          } =
-            await generateThumbnail(
-              file
-            );
+        file,
 
-          const newItem = {
+        thumbnail,
 
-            id:
-              crypto.randomUUID(),
+        buffer,
 
-            file,
+        pageCount
+      };
 
-            thumbnail,
+      setFiles((prev) => [
+        ...prev,
+        newItem
+      ]);
 
-            buffer,
+    } catch (err) {
 
-            pageCount
-          };
-
-          setFiles((prev) => [
-            ...prev,
-            newItem
-          ]);
-
-        } catch (err) {
-
-          console.error(err);
-        }
-      }
-    };
+      console.error(err);
+    }
+  }
+};
 
   // ─────────────────────────────────────────────
   // DROP HANDLER
