@@ -130,8 +130,11 @@ export default function MergePDF() {
   const generateThumbnail =
     async (file) => {
 
-      const buffer =
-        await file.arrayBuffer();
+     const originalBuffer =
+  await file.arrayBuffer();
+
+const buffer =
+  originalBuffer.slice(0);
 
       const typedArray =
         new Uint8Array(buffer);
