@@ -183,7 +183,7 @@ export default function MergePDF() {
   // ADD FILES
   // ─────────────────────────────────────────────
 
-  const addFiles = async (newFiles) => {
+const addFiles = async (newFiles) => {
 
   const pdfFiles =
     Array.from(newFiles).filter(
