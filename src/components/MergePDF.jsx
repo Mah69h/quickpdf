@@ -128,60 +128,66 @@ export default function MergePDF() {
   // ─────────────────────────────────────────────
 
   const generateThumbnail =
-    async (file) => {
+  async (file) => {
 
-     const originalBuffer =
-  await file.arrayBuffer();
+    // ORIGINAL BUFFER
+    const originalBuffer =
+      await file.arrayBuffer();
 
-const buffer =
-  originalBuffer.slice(0);
+    // COPY FOR PDF.JS
+    const previewBuffer =
+      originalBuffer.slice(0);
 
-      const typedArray =
-        new Uint8Array(buffer);
+    const typedArray =
+      new Uint8Array(previewBuffer);
 
-      const pdf =
-        await pdfjsLib.getDocument({
-          data: typedArray
-        }).promise;
-
-      const page =
-        await pdf.getPage(1);
-
-      const viewport =
-        page.getViewport({
-          scale: 0.35
-        });
-
-      const canvas =
-        document.createElement('canvas');
-
-      const context =
-        canvas.getContext('2d');
-
-      canvas.width =
-        viewport.width;
-
-      canvas.height =
-        viewport.height;
-
-      await page.render({
-        canvasContext: context,
-        viewport
+    const pdf =
+      await pdfjsLib.getDocument({
+        data: typedArray
       }).promise;
 
-      const thumbnail =
-        canvas.toDataURL(
-          'image/jpeg',
-          0.7
-        );
+    const page =
+      await pdf.getPage(1);
 
-      return {
-        thumbnail,
-        buffer,
-        pageCount: pdf.numPages
-      };
+    const viewport =
+      page.getViewport({
+        scale: 0.35
+      });
+
+    const canvas =
+      document.createElement('canvas');
+
+    const context =
+      canvas.getContext('2d');
+
+    canvas.width =
+      viewport.width;
+
+    canvas.height =
+      viewport.height;
+
+    await page.render({
+      canvasContext: context,
+      viewport
+    }).promise;
+
+    const thumbnail =
+      canvas.toDataURL(
+        'image/jpeg',
+        0.7
+      );
+
+    return {
+
+      thumbnail,
+
+      // SAVE FRESH BUFFER
+      buffer: originalBuffer.slice(0),
+
+      pageCount: pdf.numPages
     };
-
+  };
+  
   // ─────────────────────────────────────────────
   // ADD FILES
   // ─────────────────────────────────────────────
