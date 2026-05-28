@@ -21,7 +21,11 @@ export default function Navbar() {
 
         {/* LEFT SIDE */}
 
-        <div className="flex items-center gap-12">
+        <div className=" w-[260px]
+                       md:w-[300px]
+                       object-contain
+                       cursor-pointer
+                       -ml-2">
 
           {/* LOGO */}
 
@@ -122,7 +126,7 @@ export default function Navbar() {
               shadow-lg shadow-red-600/20
             "
           >
-            All Tools
+            Sign Up
           </button>
 
         </div>
