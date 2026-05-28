@@ -21,11 +21,7 @@ export default function Navbar() {
 
         {/* LEFT SIDE */}
 
-        <div className=" w-[260px]
-                       md:w-[300px]
-                       object-contain
-                       cursor-pointer
-                       -ml-2">
+        <div className="flex items-center gap-12">
 
           {/* LOGO */}
 
@@ -33,7 +29,7 @@ export default function Navbar() {
             src={logo}
             alt="QuickPDF"
             className="
-              w-[150px]
+              w-[260px]
               object-contain
               cursor-pointer
             "
@@ -126,7 +122,7 @@ export default function Navbar() {
               shadow-lg shadow-red-600/20
             "
           >
-            Sign Up
+            Sign up
           </button>
 
         </div>
