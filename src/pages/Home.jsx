@@ -1,83 +1,84 @@
+import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
-export default function Home({ setTool }) {
+export default function Home() {
 
   const tools = [
 
     {
       title: 'Merge PDF',
       icon: '📄',
-      tool: 'merge',
+      path: '/merge-pdf',
       desc: 'Combine PDFs into one file'
     },
 
     {
       title: 'Split PDF',
       icon: '✂️',
-      tool: 'split',
+      path: '/split-pdf',
       desc: 'Extract pages from PDF'
     },
 
     {
       title: 'Compress PDF',
       icon: '📉',
-      tool: 'compress',
+      path: '/compress-pdf',
       desc: 'Reduce PDF file size'
     },
 
     {
       title: 'JPG to PDF',
       icon: '🖼️',
-      tool: 'jpg-to-pdf',
+      path: '/jpg-to-pdf',
       desc: 'Convert images to PDF'
     },
 
     {
       title: 'PDF to JPG',
       icon: '🌄',
-      tool: 'pdf-to-jpg',
+      path: '/pdf-to-jpg',
       desc: 'Convert PDF pages to images'
     },
 
     {
       title: 'Word to PDF',
       icon: '📝',
-      tool: 'word-to-pdf',
+      path: '/word-to-pdf',
       desc: 'DOCX to PDF converter'
     },
 
     {
       title: 'PDF to Word',
       icon: '📘',
-      tool: 'pdf-to-word',
+      path: '/pdf-to-word',
       desc: 'Convert PDF into DOCX'
     },
 
     {
       title: 'PPT to PDF',
       icon: '📊',
-      tool: 'ppt-to-pdf',
+      path: '/ppt-to-pdf',
       desc: 'PowerPoint to PDF'
     },
 
     {
       title: 'PDF to PPT',
       icon: '📽️',
-      tool: 'pdf-to-ppt',
+      path: '/pdf-to-ppt',
       desc: 'Convert PDF into PPT'
     },
 
     {
       title: 'Excel to PDF',
       icon: '📗',
-      tool: 'excel-to-pdf',
+      path: '/excel-to-pdf',
       desc: 'Excel spreadsheet to PDF'
     },
 
     {
       title: 'PDF to Excel',
       icon: '📈',
-      tool: 'pdf-to-excel',
+      path: '/pdf-to-excel',
       desc: 'Extract tables into Excel'
     }
 
@@ -113,18 +114,15 @@ export default function Home({ setTool }) {
 
       </div>
 
-      {/* TOOLS GRID */}
+      {/* GRID */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
 
         {tools.map((item, index) => (
 
-          <button
+          <Link
             key={index}
-
-            onClick={() =>
-              setTool(item.tool)
-            }
+            to={item.path}
 
             className="
               bg-gray-900
@@ -151,7 +149,7 @@ export default function Home({ setTool }) {
               {item.desc}
             </p>
 
-          </button>
+          </Link>
 
         ))}
 
