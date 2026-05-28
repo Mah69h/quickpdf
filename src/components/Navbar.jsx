@@ -13,15 +13,15 @@ export default function Navbar() {
     ">
 
       <div className="
-        w-full
-        px-6 md:px-10
-        h-[72px]
-        flex items-center justify-between
-      ">
+  w-full
+  pl-2 pr-6 md:pl-4 md:pr-10
+  h-[72px]
+  flex items-center justify-between
+">
 
         {/* LEFT SIDE */}
 
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-4">
 
           {/* LOGO */}
 
