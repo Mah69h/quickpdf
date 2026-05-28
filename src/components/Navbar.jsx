@@ -115,7 +115,7 @@ export default function Navbar() {
           <button
             className="
               bg-red-600
-              hover:bg-red-700
+              hover:bg-red-700 text-white
               px-5 py-2.5
               rounded-xl
               text-sm font-medium
