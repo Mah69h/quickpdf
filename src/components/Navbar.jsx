@@ -32,6 +32,7 @@ export default function Navbar() {
               w-[300px]
               object-contain
               cursor-pointer
+              -ml-12
             "
           />
 
