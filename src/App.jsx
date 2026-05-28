@@ -1,5 +1,4 @@
 import {
-  BrowserRouter,
   Routes,
   Route
 } from 'react-router-dom';
@@ -26,78 +25,74 @@ function App() {
 
   return (
 
-    <BrowserRouter>
+    <Routes>
 
-      <Routes>
+      <Route
+        path="/"
+        element={<Home />}
+      />
 
-        <Route
-          path="/"
-          element={<Home />}
-        />
+      <Route
+        path="/merge-pdf"
+        element={<MergePDF />}
+      />
 
-        <Route
-          path="/merge-pdf"
-          element={<MergePDF />}
-        />
+      <Route
+        path="/split-pdf"
+        element={<SplitPDF />}
+      />
 
-        <Route
-          path="/split-pdf"
-          element={<SplitPDF />}
-        />
+      <Route
+        path="/compress-pdf"
+        element={<CompressPDF />}
+      />
 
-        <Route
-          path="/compress-pdf"
-          element={<CompressPDF />}
-        />
+      <Route
+        path="/jpg-to-pdf"
+        element={<JPGtoPDF />}
+      />
 
-        <Route
-          path="/jpg-to-pdf"
-          element={<JPGtoPDF />}
-        />
+      <Route
+        path="/pdf-to-jpg"
+        element={<PDFtoJPG />}
+      />
 
-        <Route
-          path="/pdf-to-jpg"
-          element={<PDFtoJPG />}
-        />
+      <Route
+        path="/word-to-pdf"
+        element={<WordToPDF />}
+      />
 
-        <Route
-          path="/word-to-pdf"
-          element={<WordToPDF />}
-        />
+      <Route
+        path="/ppt-to-pdf"
+        element={<PPTtoPDF />}
+      />
 
-        <Route
-          path="/ppt-to-pdf"
-          element={<PPTtoPDF />}
-        />
+      <Route
+        path="/excel-to-pdf"
+        element={<ExcelToPDF />}
+      />
 
-        <Route
-          path="/excel-to-pdf"
-          element={<ExcelToPDF />}
-        />
+      <Route
+        path="/html-to-pdf"
+        element={<HTMLtoPDF />}
+      />
 
-        <Route
-          path="/html-to-pdf"
-          element={<HTMLtoPDF />}
-        />
+      <Route
+        path="/pdf-to-word"
+        element={<PDFtoWORD />}
+      />
 
-        <Route
-          path="/pdf-to-word"
-          element={<PDFtoWORD />}
-        />
+      <Route
+        path="/pdf-to-ppt"
+        element={<PDFtoPPT />}
+      />
 
-        <Route
-          path="/pdf-to-ppt"
-          element={<PDFtoPPT />}
-        />
+      <Route
+        path="/pdf-to-excel"
+        element={<PDFtoExcel />}
+      />
 
-        <Route
-          path="/pdf-to-excel"
-          element={<PDFtoExcel />}
-        />
-
-      </Routes>
-
-    </BrowserRouter>
+    </Routes>
   );
 }
 
