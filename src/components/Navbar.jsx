@@ -4,77 +4,131 @@ export default function Navbar() {
 
   return (
 
-    <div className="
+    <header className="
       sticky top-0 z-50
       w-full
-      border-b border-white/10
-      bg-black/40
-      backdrop-blur-xl
+      bg-[#0b1120]/95
+      backdrop-blur-md
+      border-b border-white/5
     ">
 
       <div className="
-        max-w-7xl mx-auto
-        px-6 py-4
+        w-full
+        px-6 md:px-10
+        h-[72px]
         flex items-center justify-between
       ">
 
-        {/* LOGO */}
+        {/* LEFT SIDE */}
 
-        <div className="flex items-center gap-3 cursor-pointer">
+        <div className="flex items-center gap-12">
+
+          {/* LOGO */}
 
           <img
             src={logo}
             alt="QuickPDF"
-            className="w-40 object-contain"
+            className="
+              w-[150px]
+              object-contain
+              cursor-pointer
+            "
           />
 
+          {/* NAV LINKS */}
+
+          <nav className="
+            hidden md:flex
+            items-center gap-10
+          ">
+
+            <a
+              href="#tools"
+              className="
+                text-sm font-medium
+                text-gray-300
+                hover:text-white
+                transition
+              "
+            >
+              MERGE PDF
+            </a>
+
+            <a
+              href="#tools"
+              className="
+                text-sm font-medium
+                text-gray-300
+                hover:text-white
+                transition
+              "
+            >
+              SPLIT PDF
+            </a>
+
+            <a
+              href="#tools"
+              className="
+                text-sm font-medium
+                text-gray-300
+                hover:text-white
+                transition
+              "
+            >
+              COMPRESS PDF
+            </a>
+
+            <a
+              href="#tools"
+              className="
+                text-sm font-medium
+                text-gray-300
+                hover:text-white
+                transition
+              "
+            >
+              CONVERT PDF
+            </a>
+
+          </nav>
+
         </div>
 
-        {/* NAV LINKS */}
+        {/* RIGHT SIDE */}
 
         <div className="
-          hidden md:flex
-          items-center gap-8
-          text-sm text-gray-300
+          flex items-center gap-5
         ">
 
-          <a
-            href="#tools"
-            className="hover:text-white transition"
+          <button
+            className="
+              text-gray-300
+              hover:text-white
+              text-sm font-medium
+              transition
+            "
           >
-            Tools
-          </a>
+            Login
+          </button>
 
-          <a
-            href="#features"
-            className="hover:text-white transition"
+          <button
+            className="
+              bg-red-600
+              hover:bg-red-700
+              px-5 py-2.5
+              rounded-xl
+              text-sm font-medium
+              transition
+              shadow-lg shadow-red-600/20
+            "
           >
-            Features
-          </a>
-
-          <a
-            href="#footer"
-            className="hover:text-white transition"
-          >
-            Contact
-          </a>
+            All Tools
+          </button>
 
         </div>
-
-        {/* BUTTON */}
-
-        <button className="
-          bg-red-600 hover:bg-red-700
-          px-5 py-2
-          rounded-xl
-          text-sm font-medium
-          transition
-        ">
-          All Tools
-        </button>
 
       </div>
 
-    </div>
+    </header>
   );
 }
