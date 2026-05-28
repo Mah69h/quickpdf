@@ -14,7 +14,7 @@ export default function Navbar() {
 
       <div className="
   w-full
-  pl-0 pr-4 md:pl-0 md:pr-10
+  pl-0 pr-2 md:pl-0 md:pr-5
   h-[72px]
   flex items-center justify-between
 ">
