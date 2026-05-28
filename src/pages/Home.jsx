@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
+import Navbar from '../components/Navbar';
 
 export default function Home() {
 
@@ -85,7 +86,9 @@ export default function Home() {
   ];
 
   return (
-
+    <>
+    <Navbar />
+    
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white px-6 py-12">
 
       {/* LOGO */}
@@ -156,5 +159,6 @@ export default function Home() {
       </div>
 
     </div>
+    </>
   );
 }
