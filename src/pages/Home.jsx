@@ -81,7 +81,15 @@ export default function Home() {
       icon: '📈',
       path: '/pdf-to-excel',
       desc: 'Extract tables into Excel'
-    }
+    },
+
+    {
+  title: 'Delete PDF Pages',
+  icon: '🗑️',
+  path: '/delete-pages',
+  tool: 'delete-pages'
+}
+    
 
   ];
 

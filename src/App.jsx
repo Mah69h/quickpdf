@@ -20,6 +20,7 @@ import HTMLtoPDF from "./components/HTMLtoPDF";
 import PDFtoWORD from "./components/PDFtoWORD";
 import PDFtoPPT from "./components/PDFtoPPT";
 import PDFtoExcel from "./components/PDFtoExcel";
+import DeletePages from './components/DeletePages';
 
 function App() {
 
@@ -90,6 +91,11 @@ function App() {
       <Route
         path="/pdf-to-excel"
         element={<PDFtoExcel />}
+      />
+
+      <Route
+        path="/delete-pages"
+        element={<DeletePages />}
       />
 
     </Routes>
