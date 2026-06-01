@@ -94,6 +94,12 @@ export default function Home() {
   icon: '🔄',
   path: '/rotate-pdf',
   tool: 'rotate-pdf'
+},
+    {
+  title: 'Extract Pages',
+  icon: '📄',
+  path: '/extract-pages',
+  tool: 'extract-pages'
 }
 
   ];
