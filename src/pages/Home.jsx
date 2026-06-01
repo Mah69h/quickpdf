@@ -88,8 +88,13 @@ export default function Home() {
   icon: '🗑️',
   path: '/delete-pages',
   tool: 'delete-pages'
+},
+    {
+  title: 'Rotate PDF',
+  icon: '🔄',
+  path: '/rotate-pdf',
+  tool: 'rotate-pdf'
 }
-    
 
   ];
 
