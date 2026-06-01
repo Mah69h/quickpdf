@@ -91,18 +91,6 @@ export default function Home() {
     
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white px-6 py-12">
 
-      {/* LOGO */}
-
-      <div className="flex justify-center mb-14">
-
-        <img
-  src={logo}
-  alt="QuickPDF"
-  className="w-[200px] mx-auto mb-3"
-/>
-
-      </div>
-
       {/* HEADING */}
 
       <div className="text-center mb-8">
