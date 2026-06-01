@@ -96,16 +96,16 @@ export default function Home() {
       <div className="flex justify-center mb-14">
 
         <img
-          src={logo}
-          alt="QuickPDF"
-          className="w-[260px] md:w-[340px]"
-        />
+  src={logo}
+  alt="QuickPDF"
+  className="w-[200px] mx-auto mb-3"
+/>
 
       </div>
 
       {/* HEADING */}
 
-      <div className="text-center mb-14">
+      <div className="text-center mb-8">
 
         <h1 className="text-5xl font-bold mb-4">
           Every PDF Tool You Need
