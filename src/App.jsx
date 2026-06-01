@@ -21,6 +21,7 @@ import PDFtoWORD from "./components/PDFtoWORD";
 import PDFtoPPT from "./components/PDFtoPPT";
 import PDFtoExcel from "./components/PDFtoExcel";
 import DeletePages from './components/DeletePages';
+import RotatePDF from './components/RotatePDF';
 
 function App() {
 
@@ -96,6 +97,11 @@ function App() {
       <Route
         path="/delete-pages"
         element={<DeletePages />}
+      />
+
+      <Route
+        path="/rotate-pdf"
+        element={<RotatePDF />}
       />
 
     </Routes>
