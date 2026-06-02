@@ -24,6 +24,7 @@ import DeletePages from './components/DeletePages';
 import RotatePDF from './components/RotatePDF';
 import ExtractPages from './components/ExtractPages';
 import WatermarkPDF from './components/WatermarkPDF';
+import PageNumbersPDF from './components/PageNumbersPDF';
 
 function App() {
 
@@ -114,6 +115,11 @@ function App() {
       <Route
         path="/watermark-pdf"
         element={<WatermarkPDF />}
+      />
+
+      <Route
+        path="/page-numbers-pdf"
+        element={<PageNumbersPDF />}
       />
 
     </Routes>

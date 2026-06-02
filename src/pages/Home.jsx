@@ -106,6 +106,12 @@ export default function Home() {
   icon: '🖋️',
   path: '/watermark-pdf',
   tool: 'watermark-pdf'
+},
+    {
+  title: 'Page Numbers PDF',
+  icon: '🔢',
+  path: '/page-numbers-pdf',
+  tool: 'page-numbers-pdf'
 }
 
   ];
