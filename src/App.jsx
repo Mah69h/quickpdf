@@ -23,6 +23,7 @@ import PDFtoExcel from "./components/PDFtoExcel";
 import DeletePages from './components/DeletePages';
 import RotatePDF from './components/RotatePDF';
 import ExtractPages from './components/ExtractPages';
+import WatermarkPDF from './components/WatermarkPDF';
 
 function App() {
 
@@ -108,6 +109,11 @@ function App() {
       <Route
         path="/extract-pages"
         element={<ExtractPages />}
+      />
+
+      <Route
+        path="/watermark-pdf"
+        element={<WatermarkPDF />}
       />
 
     </Routes>

@@ -100,6 +100,12 @@ export default function Home() {
   icon: '📄',
   path: '/extract-pages',
   tool: 'extract-pages'
+},
+    {
+  title: 'Watermark PDF',
+  icon: '🖋️',
+  path: '/watermark-pdf',
+  tool: 'watermark-pdf'
 }
 
   ];
