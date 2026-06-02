@@ -13,6 +13,12 @@ export default function PageNumbersPDF() {
   const [loading, setLoading] =
     useState(false);
 
+  const [position, setPosition] =
+    useState('bottom-center');
+
+  const [fontSize, setFontSize] =
+    useState(12);
+
   const inputRef = useRef(null);
 
   // ADD PAGE NUMBERS
@@ -40,18 +46,61 @@ export default function PageNumbersPDF() {
         (page, index) => {
 
           const {
-            width
+            width,
+            height
           } = page.getSize();
+
+          let x = width / 2;
+
+          let y = 25;
+
+          // POSITIONS
+
+          if (position === 'top-left') {
+
+            x = 30;
+            y = height - 30;
+          }
+
+          if (position === 'top-center') {
+
+            x = width / 2;
+            y = height - 30;
+          }
+
+          if (position === 'top-right') {
+
+            x = width - 40;
+            y = height - 30;
+          }
+
+          if (position === 'bottom-left') {
+
+            x = 30;
+            y = 25;
+          }
+
+          if (position === 'bottom-center') {
+
+            x = width / 2;
+            y = 25;
+          }
+
+          if (position === 'bottom-right') {
+
+            x = width - 40;
+            y = 25;
+          }
 
           page.drawText(
             `${index + 1}`,
             {
 
-              x: width / 2,
+              x,
 
-              y: 25,
+              y,
 
-              size: 12,
+              size: Number(fontSize),
 
               color: rgb(
                 0.5,
@@ -175,6 +224,89 @@ export default function PageNumbersPDF() {
             </p>
 
           </div>
+
+          {/* POSITION */}
+
+          <select
+            value={position}
+
+            onChange={(e) =>
+              setPosition(
+                e.target.value
+              )
+            }
+
+            className="
+              w-full
+              bg-gray-900
+              border border-gray-700
+              focus:border-red-500
+              outline-none
+              rounded-2xl
+              px-5 py-4
+              text-white
+            "
+          >
+
+            <option value="top-left">
+              Top Left
+            </option>
+
+            <option value="top-center">
+              Top Center
+            </option>
+
+            <option value="top-right">
+              Top Right
+            </option>
+
+            <option value="bottom-left">
+              Bottom Left
+            </option>
+
+            <option value="bottom-center">
+              Bottom Center
+            </option>
+
+            <option value="bottom-right">
+              Bottom Right
+            </option>
+
+          </select>
+
+          {/* FONT SIZE */}
+
+          <div className="text-left">
+
+            <label className="text-gray-300 text-sm">
+              Font Size
+            </label>
+
+            <input
+              type="range"
+
+              min="8"
+
+              max="40"
+
+              value={fontSize}
+
+              onChange={(e) =>
+                setFontSize(
+                  e.target.value
+                )
+              }
+
+              className="w-full mt-2"
+            />
+
+            <p className="text-gray-500 text-sm mt-1">
+              {fontSize}px
+            </p>
+
+          </div>
+
+          {/* BUTTON */}
 
           <button
             onClick={addPageNumbers}
