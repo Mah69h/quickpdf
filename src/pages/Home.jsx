@@ -112,13 +112,7 @@ export default function Home() {
   icon: '🔢',
   path: '/page-numbers-pdf',
   tool: 'page-numbers-pdf'
-},
-    {
-  title: 'Protect PDF',
-  icon: '🔒',
-  path: '/protect-pdf',
-  tool: 'protect-pdf'
-} 
+}
 
   ];
 
