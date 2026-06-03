@@ -17,15 +17,6 @@ export default function WatermarkPDF() {
   const [text, setText] =
     useState('CONFIDENTIAL');
 
-  const [position, setPosition] =
-    useState('center');
-
-  const [size, setSize] =
-    useState(40);
-
-  const [opacity, setOpacity] =
-    useState(0.3);
-
   const inputRef = useRef(null);
 
   const [position, setPosition] =
