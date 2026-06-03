@@ -19,23 +19,18 @@ export default function WatermarkPDF() {
 
   const inputRef = useRef(null);
 
-  const [position, setPosition] =
-  useState('center');
+ const [position, setPosition] = useState("top-left");
 
-const [size, setSize] =
-  useState(40);
+const [size, setSize] = useState(40);
 
-const [opacity, setOpacity] =
-  useState(50);
+const [opacity, setOpacity] = useState(30);
 
-const [rotation, setRotation] =
-  useState(45);
+const [rotation, setRotation] = useState(45);
 
-const [color, setColor] =
-  useState('#9ca3af');
+const [color, setColor] = useState("#ff4d4f");
 
 const [fontFamily, setFontFamily] =
-  useState('Helvetica');
+  useState("Helvetica");
 
 const [bold, setBold] =
   useState(false);
@@ -304,171 +299,207 @@ const [mosaic, setMosaic] =
 
   {/* LIVE PREVIEW */}
 
+  <div className="
+  relative
+  h-72
+  bg-gray-900
+  border border-gray-700
+  rounded-2xl
+  overflow-hidden
+">
+
   <div
-    className="
-      bg-gray-900
-      border border-gray-700
-      rounded-2xl
-      h-64
-      flex
-      items-center
-      justify-center
-      overflow-hidden
-      relative
-    "
+    className="absolute"
+    style={{
+      color,
+      opacity: opacity / 100,
+      fontSize: `${size}px`,
+      fontWeight: bold ? 700 : 400,
+      fontStyle: italic ? "italic" : "normal",
+      transform: `rotate(${rotation}deg)`,
+
+      top:
+        position.includes("top")
+          ? "10%"
+          : position.includes("bottom")
+          ? "80%"
+          : "50%",
+
+      left:
+        position.includes("left")
+          ? "10%"
+          : position.includes("right")
+          ? "75%"
+          : "50%"
+    }}
   >
+    {text}
+  </div>
 
-    {mosaic ? (
+</div>
+  {/* POSITION */}
 
-      <div className="absolute inset-0 overflow-hidden">
+  <div className="bg-gray-900 border border-gray-700 rounded-2xl p-5">
 
-        {Array.from(
-          { length: 18 }
-        ).map((_, i) => (
+  <p className="text-white font-medium mb-4">
+    Position
+  </p>
 
-          <div
-            key={i}
-            style={{
-              color,
-              opacity:
-                opacity / 100,
-              fontSize:
-                `${size}px`,
-              transform:
-                `rotate(${rotation}deg)`,
-              position:
-                'absolute',
-              left:
-                `${(i % 4) * 25}%`,
-              top:
-                `${Math.floor(i / 4) * 20}%`
-            }}
-          >
-            {text}
-          </div>
+  <div className="flex items-start gap-6">
 
-        ))}
+    <div className="grid grid-cols-3 gap-1">
 
-      </div>
+      {[
+        "top-left",
+        "top-center",
+        "top-right",
 
-    ) : (
+        "middle-left",
+        "center",
+        "middle-right",
 
-      <div
-        style={{
-          color,
-          opacity:
-            opacity / 100,
-          fontSize:
-            `${size}px`,
-          transform:
-            `rotate(${rotation}deg)`,
-          fontWeight:
-            bold
-              ? '700'
-              : '400',
-          fontStyle:
-            italic
-              ? 'italic'
-              : 'normal',
-          fontFamily
-        }}
-      >
-        {text}
-      </div>
+        "bottom-left",
+        "bottom-center",
+        "bottom-right"
+      ].map((item) => (
 
-    )}
+        <button
+          key={item}
+          onClick={() =>
+            setPosition(item)
+          }
+          className={`
+            w-10 h-10 rounded
+            border
+
+            ${
+              position === item
+                ? "bg-red-500 border-red-500"
+                : "bg-gray-800 border-gray-600"
+            }
+          `}
+        />
+
+      ))}
+
+    </div>
+
+    <label className="flex items-center gap-3 text-white">
+
+      <input
+        type="checkbox"
+        checked={mosaic}
+        onChange={(e) =>
+          setMosaic(
+            e.target.checked
+          )
+        }
+      />
+
+      Mosaic
+
+    </label>
 
   </div>
 
-  {/* POSITION */}
-
-  <select
-    value={position}
-    onChange={(e) =>
-      setPosition(
-        e.target.value
-      )
-    }
-    className="
-      w-full
-      bg-gray-900
-      border border-gray-700
-      rounded-xl
-      px-4 py-3
-      text-white
-    "
-  >
-
-    <option value="center">
-      Center
-    </option>
-
-    <option value="top-left">
-      Top Left
-    </option>
-
-    <option value="top-center">
-      Top Center
-    </option>
-
-    <option value="top-right">
-      Top Right
-    </option>
-
-    <option value="middle-left">
-      Middle Left
-    </option>
-
-    <option value="middle-right">
-      Middle Right
-    </option>
-
-    <option value="bottom-left">
-      Bottom Left
-    </option>
-
-    <option value="bottom-center">
-      Bottom Center
-    </option>
-
-    <option value="bottom-right">
-      Bottom Right
-    </option>
-
-  </select>
+</div>
 
   {/* FONT */}
 
-  <select
-    value={fontFamily}
-    onChange={(e) =>
-      setFontFamily(
-        e.target.value
-      )
-    }
-    className="
-      w-full
-      bg-gray-900
-      border border-gray-700
-      rounded-xl
-      px-4 py-3
-      text-white
-    "
-  >
+  <div className="bg-gray-900 border border-gray-700 rounded-2xl p-5">
 
-    <option>
-      Helvetica
-    </option>
+  <p className="text-white font-medium mb-4">
+    Text Format
+  </p>
 
-    <option>
-      Times New Roman
-    </option>
+  <div className="flex flex-wrap gap-3">
 
-    <option>
-      Courier
-    </option>
+    <select
+  value={fontFamily}
+  onChange={(e) =>
+    setFontFamily(e.target.value)
+  }
+  className="
+    bg-gray-800
+    px-3 py-2
+    rounded-lg
+    text-white
+  "
+>
 
-  </select>
+  <option value="Arial">Arial</option>
+  <option value="Helvetica">Helvetica</option>
+  <option value="Verdana">Verdana</option>
+  <option value="Tahoma">Tahoma</option>
+  <option value="Trebuchet MS">Trebuchet MS</option>
+  <option value="Times New Roman">Times New Roman</option>
+  <option value="Georgia">Georgia</option>
+  <option value="Garamond">Garamond</option>
+  <option value="Courier New">Courier New</option>
+  <option value="Brush Script MT">Brush Script MT</option>
+  <option value="Impact">Impact</option>
+  <option value="Comic Sans MS">Comic Sans MS</option>
+  <option value="Lucida Sans">Lucida Sans</option>
+  <option value="Palatino">Palatino</option>
+  <option value="Bookman">Bookman</option>
+  <option value="Candara">Candara</option>
+  <option value="Century Gothic">Century Gothic</option>
+  <option value="Franklin Gothic Medium">
+    Franklin Gothic
+  </option>
+  <option value="Segoe UI">Segoe UI</option>
+  <option value="Calibri">Calibri</option>
+
+</select>
+
+    <button
+      onClick={() =>
+        setBold(!bold)
+      }
+      className={`
+        px-4 py-2 rounded-lg
+
+        ${
+          bold
+            ? "bg-red-600"
+            : "bg-gray-800"
+        }
+      `}
+    >
+      B
+    </button>
+
+    <button
+      onClick={() =>
+        setItalic(!italic)
+      }
+      className={`
+        px-4 py-2 rounded-lg
+
+        ${
+          italic
+            ? "bg-red-600"
+            : "bg-gray-800"
+        }
+      `}
+    >
+      I
+    </button>
+
+    <input
+      type="color"
+      value={color}
+      onChange={(e) =>
+        setColor(
+          e.target.value
+        )
+      }
+      className="w-12 h-10"
+    />
+
+  </div>
+
+</div>
 
   {/* STYLE */}
 
@@ -559,53 +590,101 @@ const [mosaic, setMosaic] =
 
   {/* OPACITY */}
 
-  <div>
+ <div className="bg-gray-900 border border-gray-700 rounded-2xl p-5">
 
-    <p className="text-gray-400 mb-2">
-      Opacity: {opacity}%
-    </p>
+  <p className="text-white mb-3">
+    Transparency
+  </p>
 
-    <input
-      type="range"
-      min="0"
-      max="100"
-      value={opacity}
-      onChange={(e) =>
-        setOpacity(
-          Number(
-            e.target.value
-          )
-        )
-      }
-      className="w-full"
-    />
+  <select
+    value={opacity}
+    onChange={(e) =>
+      setOpacity(
+        Number(e.target.value)
+      )
+    }
+    className="
+      w-full
+      bg-gray-800
+      rounded-xl
+      px-4 py-3
+      text-white
+    "
+  >
 
-  </div>
+    <option value={0}>
+      No Transparency
+    </option>
+
+    <option value={20}>
+      20%
+    </option>
+
+    <option value={40}>
+      40%
+    </option>
+
+    <option value={60}>
+      60%
+    </option>
+
+    <option value={80}>
+      80%
+    </option>
+
+  </select>
+
+</div>
 
   {/* ROTATION */}
 
-  <div>
+  <div className="bg-gray-900 border border-gray-700 rounded-2xl p-5">
 
-    <p className="text-gray-400 mb-2">
-      Rotation: {rotation}°
-    </p>
+  <p className="text-white mb-3">
+    Rotation
+  </p>
 
-    <input
-      type="range"
-      min="0"
-      max="360"
-      value={rotation}
-      onChange={(e) =>
-        setRotation(
-          Number(
-            e.target.value
-          )
+  <select
+    value={rotation}
+    onChange={(e) =>
+      setRotation(
+        Number(
+          e.target.value
         )
-      }
-      className="w-full"
-    />
+      )
+    }
+    className="
+      w-full
+      bg-gray-800
+      rounded-xl
+      px-4 py-3
+      text-white
+    "
+  >
 
-  </div>
+    <option value={0}>
+      0°
+    </option>
+
+    <option value={45}>
+      45°
+    </option>
+
+    <option value={90}>
+      90°
+    </option>
+
+    <option value={135}>
+      135°
+    </option>
+
+    <option value={180}>
+      180°
+    </option>
+
+  </select>
+
+</div>
 
   {/* MOSAIC */}
 
