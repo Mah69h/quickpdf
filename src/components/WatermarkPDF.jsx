@@ -11,102 +11,190 @@ export default function WatermarkPDF() {
   const [file, setFile] =
     useState(null);
 
-  const [text, setText] =
-    useState('');
-
   const [loading, setLoading] =
     useState(false);
 
+  const [text, setText] =
+    useState('CONFIDENTIAL');
+
+  const [position, setPosition] =
+    useState('center');
+
+  const [size, setSize] =
+    useState(40);
+
+  const [opacity, setOpacity] =
+    useState(0.3);
+
   const inputRef = useRef(null);
 
-  // ADD WATERMARK
+  const addWatermark =
+    async () => {
 
-  const addWatermark = async () => {
+      if (!file) return;
 
-    if (!file || !text) return;
+      try {
 
-    try {
+        setLoading(true);
 
-      setLoading(true);
+        const buffer =
+          await file.arrayBuffer();
 
-      const buffer =
-        await file.arrayBuffer();
+        const pdfDoc =
+          await PDFDocument.load(
+            buffer
+          );
 
-      const pdfDoc =
-        await PDFDocument.load(
-          buffer
-        );
+        const pages =
+          pdfDoc.getPages();
 
-      const pages =
-        pdfDoc.getPages();
+        pages.forEach(
+          (page) => {
 
-      pages.forEach((page) => {
+            const {
+              width,
+              height
+            } =
+              page.getSize();
 
-        const {
-          width,
-          height
-        } = page.getSize();
+            let x = 50;
+            let y = 50;
 
-        page.drawText(text, {
+            switch (
+              position
+            ) {
 
-          x: width / 2 - 120,
+              case 'center':
 
-          y: height / 2,
+                x =
+                  width / 2 -
+                  size * 2;
 
-          size: 40,
+                y =
+                  height / 2;
 
-          rotate: degrees(-35),
+                break;
 
-          color: rgb(
-            0.8,
-            0.8,
-            0.8
-          ),
+              case 'top-left':
 
-          opacity: 0.35
-        });
-      });
+                x = 30;
 
-      const pdfBytes =
-        await pdfDoc.save();
+                y =
+                  height - 60;
 
-      const blob =
-        new Blob(
-          [pdfBytes],
-          {
-            type:
-              'application/pdf'
+                break;
+
+              case 'top-right':
+
+                x =
+                  width - 220;
+
+                y =
+                  height - 60;
+
+                break;
+
+              case 'bottom-left':
+
+                x = 30;
+
+                y = 40;
+
+                break;
+
+              case 'bottom-right':
+
+                x =
+                  width - 220;
+
+                y = 40;
+
+                break;
+
+              default:
+
+                break;
+            }
+
+            page.drawText(
+              text,
+              {
+
+                x,
+
+                y,
+
+                size,
+
+                rotate:
+                  position ===
+                  'center'
+                    ? degrees(
+                        45
+                      )
+                    : degrees(
+                        0
+                      ),
+
+                color:
+                  rgb(
+                    0.7,
+                    0.7,
+                    0.7
+                  ),
+
+                opacity
+              }
+            );
           }
         );
 
-      const url =
-        URL.createObjectURL(blob);
+        const pdfBytes =
+          await pdfDoc.save();
 
-      const a =
-        document.createElement('a');
+        const blob =
+          new Blob(
+            [pdfBytes],
+            {
+              type:
+                'application/pdf'
+            }
+          );
 
-      a.href = url;
+        const url =
+          URL.createObjectURL(
+            blob
+          );
 
-      a.download =
-        'quickpdf-watermarked.pdf';
+        const a =
+          document.createElement(
+            'a'
+          );
 
-      a.click();
+        a.href = url;
 
-      URL.revokeObjectURL(url);
+        a.download =
+          'quickpdf-watermarked.pdf';
 
-    } catch (err) {
+        a.click();
 
-      console.error(err);
+        URL.revokeObjectURL(
+          url
+        );
 
-      alert(
-        'Failed to add watermark'
-      );
+      } catch (err) {
 
-    } finally {
+        console.error(err);
 
-      setLoading(false);
-    }
-  };
+        alert(
+          'Failed to add watermark'
+        );
+
+      } finally {
+
+        setLoading(false);
+      }
+    };
 
   return (
 
@@ -115,8 +203,6 @@ export default function WatermarkPDF() {
       <h2 className="text-3xl font-bold text-white mb-8">
         Watermark PDF
       </h2>
-
-      {/* UPLOAD */}
 
       {!file && (
 
@@ -161,8 +247,6 @@ export default function WatermarkPDF() {
         </div>
       )}
 
-      {/* WATERMARK INPUT */}
-
       {file && (
 
         <div className="space-y-5">
@@ -171,21 +255,16 @@ export default function WatermarkPDF() {
             bg-gray-900
             border border-gray-800
             rounded-2xl
-            p-5
-            text-left
+            p-4 text-left
           ">
 
-            <p className="text-white font-medium truncate">
+            <p className="text-white truncate">
               {file.name}
             </p>
 
           </div>
 
           <input
-            type="text"
-
-            placeholder="Enter watermark text"
-
             value={text}
 
             onChange={(e) =>
@@ -194,24 +273,123 @@ export default function WatermarkPDF() {
               )
             }
 
+            placeholder="Watermark Text"
+
             className="
               w-full
               bg-gray-900
               border border-gray-700
-              focus:border-red-500
-              outline-none
-              rounded-2xl
-              px-5 py-4
+              rounded-xl
+              px-4 py-3
               text-white
             "
           />
 
-          <button
-            onClick={addWatermark}
+          <select
+            value={position}
 
-            disabled={
-              loading || !text
+            onChange={(e) =>
+              setPosition(
+                e.target.value
+              )
             }
+
+            className="
+              w-full
+              bg-gray-900
+              border border-gray-700
+              rounded-xl
+              px-4 py-3
+              text-white
+            "
+          >
+
+            <option value="center">
+              Center
+            </option>
+
+            <option value="top-left">
+              Top Left
+            </option>
+
+            <option value="top-right">
+              Top Right
+            </option>
+
+            <option value="bottom-left">
+              Bottom Left
+            </option>
+
+            <option value="bottom-right">
+              Bottom Right
+            </option>
+
+          </select>
+
+          <div>
+
+            <p className="text-gray-400 mb-2">
+              Font Size
+            </p>
+
+            <input
+              type="range"
+
+              min="20"
+
+              max="80"
+
+              value={size}
+
+              onChange={(e) =>
+                setSize(
+                  Number(
+                    e.target.value
+                  )
+                )
+              }
+
+              className="w-full"
+            />
+
+          </div>
+
+          <div>
+
+            <p className="text-gray-400 mb-2">
+              Opacity
+            </p>
+
+            <input
+              type="range"
+
+              min="0.1"
+
+              max="1"
+
+              step="0.1"
+
+              value={opacity}
+
+              onChange={(e) =>
+                setOpacity(
+                  Number(
+                    e.target.value
+                  )
+                )
+              }
+
+              className="w-full"
+            />
+
+          </div>
+
+          <button
+            onClick={
+              addWatermark
+            }
+
+            disabled={loading}
 
             className={`
               w-full py-4 rounded-2xl
