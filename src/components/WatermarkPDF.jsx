@@ -469,33 +469,42 @@ if (mosaic) {
             "
           />
 
-          {mosaic ? (
+{mosaic ? (
 
-            <div className="
-              absolute
-              inset-0
-              flex
-              flex-wrap
-              gap-1
-              p-2
-            ">
-              {Array.from({
-                length: 9
-              }).map((_, i) => (
+  [
+    { left: '10%', top: '8%' },
+    { left: '50%', top: '8%' },
+    { left: '90%', top: '8%' },
 
-                <div
-                  key={i}
-                  className="
-                    w-2 h-2
-                    bg-red-500
-                    rounded-full
-                  "
-                />
+    { left: '10%', top: '50%' },
+    { left: '50%', top: '50%' },
+    { left: '90%', top: '50%' },
 
-              ))}
-            </div>
+    { left: '10%', top: '92%' },
+    { left: '50%', top: '92%' },
+    { left: '90%', top: '92%' }
 
-          ) : (
+  ].map((dot, i) => (
+
+    <div
+      key={i}
+      className="
+        absolute
+        w-3 h-3
+        bg-red-500
+        rounded-full
+        -translate-x-1/2
+        -translate-y-1/2
+      "
+      style={{
+        left: dot.left,
+        top: dot.top
+      }}
+    />
+
+  ))
+
+) : (
 
             <div
               className="
