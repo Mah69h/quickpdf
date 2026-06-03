@@ -115,7 +115,7 @@ export default function Home() {
 },
     {
   title: 'Reorder Pages PDF',
-  icon: '🔀',
+  icon: '📑',
   path: '/reorder-pages-pdf',
   tool: 'reorder-pages-pdf'
 }
