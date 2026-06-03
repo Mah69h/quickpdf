@@ -25,6 +25,7 @@ import RotatePDF from './components/RotatePDF';
 import ExtractPages from './components/ExtractPages';
 import WatermarkPDF from './components/WatermarkPDF';
 import PageNumbersPDF from './components/PageNumbersPDF';
+import ReorderPagesPDF from './components/ReorderPagesPDF';
 
 function App() {
 
@@ -120,6 +121,11 @@ function App() {
       <Route
         path="/page-numbers-pdf"
         element={<PageNumbersPDF />}
+      />
+
+      <Route
+        path="/reorder-pages-pdf"
+        element={<ReorderPagesPDF />}
       />
 
     </Routes>

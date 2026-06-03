@@ -112,6 +112,12 @@ export default function Home() {
   icon: '🔢',
   path: '/page-numbers-pdf',
   tool: 'page-numbers-pdf'
+},
+    {
+  title: 'Reorder Pages PDF',
+  icon: '🔀',
+  path: '/reorder-pages-pdf',
+  tool: 'reorder-pages-pdf'
 }
 
   ];
