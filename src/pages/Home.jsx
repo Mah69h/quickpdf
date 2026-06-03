@@ -103,7 +103,7 @@ export default function Home() {
 },
     {
   title: 'Watermark PDF',
-  icon: '🖋️',
+  icon: '💧',
   path: '/watermark-pdf',
   tool: 'watermark-pdf'
 },

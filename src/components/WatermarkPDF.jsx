@@ -26,8 +26,11 @@ export default function WatermarkPDF() {
   const [opacity, setOpacity] =
     useState(0.3);
     
-  const [thumbnail, setThumbnail] =
-  useState(null);
+const [thumbnails, setThumbnails] =
+  useState([]);
+
+const [totalPages, setTotalPages] =
+  useState(0);
 
   const [mosaic, setMosaic] =
   useState(false);
@@ -263,49 +266,60 @@ if (mosaic) {
 
   onChange={async (e) => {
 
-    const selectedFile =
-      e.target.files[0];
+const buffer =
+  await selectedFile.arrayBuffer();
 
-    if (!selectedFile) return;
+const pdf =
+  await pdfjsLib.getDocument({
+    data: buffer
+  }).promise;
 
-    setFile(selectedFile);
+setTotalPages(pdf.numPages);
 
-    const buffer =
-      await selectedFile.arrayBuffer();
+const generatedThumbs = [];
 
-    const pdf =
-      await pdfjsLib.getDocument({
-        data: buffer
-      }).promise;
+const previewPages =
+  Math.min(pdf.numPages, 4);
 
-    const page =
-      await pdf.getPage(1);
+for (
+  let i = 1;
+  i <= previewPages;
+  i++
+) {
 
-    const viewport =
-      page.getViewport({
-        scale: 0.5
-      });
+  const page =
+    await pdf.getPage(i);
 
-    const canvas =
-      document.createElement('canvas');
+  const viewport =
+    page.getViewport({
+      scale: 0.25
+    });
 
-    const context =
-      canvas.getContext('2d');
+  const canvas =
+    document.createElement('canvas');
 
-    canvas.width =
-      viewport.width;
+  const context =
+    canvas.getContext('2d');
 
-    canvas.height =
-      viewport.height;
+  canvas.width =
+    viewport.width;
 
-    await page.render({
-      canvasContext: context,
-      viewport
-    }).promise;
+  canvas.height =
+    viewport.height;
 
-    setThumbnail(
-      canvas.toDataURL()
-    );
+  await page.render({
+    canvasContext: context,
+    viewport
+  }).promise;
+
+  generatedThumbs.push(
+    canvas.toDataURL()
+  );
+}
+
+setThumbnails(
+  generatedThumbs
+);
 
   }}
 />
@@ -402,87 +416,120 @@ if (mosaic) {
 
           <div>
 
-            {thumbnail && (
+{thumbnails.length > 0 && (
 
 <div className="
   bg-gray-900
   border border-gray-700
   rounded-2xl
-  p-6
-  flex justify-center
+  p-5
 ">
 
-  <div className="relative">
+  <p className="
+    text-gray-400
+    text-sm
+    mb-4
+  ">
+    Preview
+  </p>
 
-    <img
-      src={thumbnail}
-      alt="preview"
-      className="
-        w-48
-        rounded-lg
-      "
-    />
+  <div className="
+    flex gap-3
+    justify-center
+    flex-wrap
+  ">
 
-    {mosaic ? (
+    {thumbnails.map(
+      (thumb, index) => (
 
-      Array.from({ length: 12 }).map(
-        (_, i) => (
+        <div
+          key={index}
+          className="relative"
+        >
 
-          <div
-            key={i}
+          <img
+            src={thumb}
+            alt={`Page ${index + 1}`}
             className="
-              absolute
-              w-3 h-3
-              bg-red-500
-              rounded-full
+              w-24
+              border
+              border-gray-700
+              rounded-lg
             "
-            style={{
-              left: `${15 + (i % 3) * 30}%`,
-              top: `${10 + Math.floor(i / 3) * 20}%`
-            }}
           />
 
-        )
+          {mosaic ? (
+
+            <div className="
+              absolute
+              inset-0
+              flex
+              flex-wrap
+              gap-1
+              p-2
+            ">
+              {Array.from({
+                length: 9
+              }).map((_, i) => (
+
+                <div
+                  key={i}
+                  className="
+                    w-2 h-2
+                    bg-red-500
+                    rounded-full
+                  "
+                />
+
+              ))}
+            </div>
+
+          ) : (
+
+            <div
+              className="
+                absolute
+                w-3 h-3
+                bg-red-500
+                rounded-full
+              "
+              style={{
+                left:
+                  position.includes('right')
+                    ? '75%'
+                    : position.includes('left')
+                    ? '15%'
+                    : '45%',
+
+                top:
+                  position.includes('top')
+                    ? '15%'
+                    : position.includes('bottom')
+                    ? '75%'
+                    : '45%'
+              }}
+            />
+
+          )}
+
+        </div>
+
       )
-
-    ) : (
-
-      <div
-        className="
-          absolute
-          w-4 h-4
-          bg-red-500
-          rounded-full
-          border-2 border-white
-        "
-        style={{
-          left:
-            position === 'top-left'
-              ? '15%'
-              : position === 'top-right'
-              ? '85%'
-              : position === 'bottom-left'
-              ? '15%'
-              : position === 'bottom-right'
-              ? '85%'
-              : '50%',
-
-          top:
-            position === 'top-left'
-              ? '15%'
-              : position === 'top-right'
-              ? '15%'
-              : position === 'bottom-left'
-              ? '85%'
-              : position === 'bottom-right'
-              ? '85%'
-              : '50%'
-        }}
-      />
-
     )}
 
   </div>
+
+  {totalPages > 4 && (
+
+    <p className="
+      text-gray-500
+      text-sm
+      mt-4
+    ">
+      + {totalPages - 4} more pages
+    </p>
+
+  )}
 
 </div>
 
