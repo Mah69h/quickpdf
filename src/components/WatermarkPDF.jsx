@@ -6,6 +6,11 @@ import {
   degrees
 } from 'pdf-lib';
 
+import * as pdfjsLib from 'pdfjs-dist';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
 export default function WatermarkPDF() {
 
   const [file, setFile] =
@@ -264,64 +269,70 @@ if (mosaic) {
   accept="application/pdf"
   className="hidden"
 
-  onChange={async (e) => {
+ onChange={async (e) => {
 
-const buffer =
-  await selectedFile.arrayBuffer();
+  const selectedFile =
+    e.target.files[0];
 
-const pdf =
-  await pdfjsLib.getDocument({
-    data: buffer
-  }).promise;
+  if (!selectedFile) return;
 
-setTotalPages(pdf.numPages);
+  setFile(selectedFile);
 
-const generatedThumbs = [];
+  const buffer =
+    await selectedFile.arrayBuffer();
 
-const previewPages =
-  Math.min(pdf.numPages, 4);
+  const pdf =
+    await pdfjsLib.getDocument({
+      data: buffer
+    }).promise;
 
-for (
-  let i = 1;
-  i <= previewPages;
-  i++
-) {
+  setTotalPages(pdf.numPages);
 
-  const page =
-    await pdf.getPage(i);
+  const generatedThumbs = [];
 
-  const viewport =
-    page.getViewport({
-      scale: 0.25
-    });
+  const previewPages =
+    Math.min(pdf.numPages, 4);
 
-  const canvas =
-    document.createElement('canvas');
+  for (
+    let i = 1;
+    i <= previewPages;
+    i++
+  ) {
 
-  const context =
-    canvas.getContext('2d');
+    const page =
+      await pdf.getPage(i);
 
-  canvas.width =
-    viewport.width;
+    const viewport =
+      page.getViewport({
+        scale: 0.25
+      });
 
-  canvas.height =
-    viewport.height;
+    const canvas =
+      document.createElement('canvas');
 
-  await page.render({
-    canvasContext: context,
-    viewport
-  }).promise;
+    const context =
+      canvas.getContext('2d');
 
-  generatedThumbs.push(
-    canvas.toDataURL()
+    canvas.width =
+      viewport.width;
+
+    canvas.height =
+      viewport.height;
+
+    await page.render({
+      canvasContext: context,
+      viewport
+    }).promise;
+
+    generatedThumbs.push(
+      canvas.toDataURL()
+    );
+  }
+
+  setThumbnails(
+    generatedThumbs
   );
-}
-
-setThumbnails(
-  generatedThumbs
-);
-
-  }}
+}}
 />
 
           <div className="text-6xl mb-4">
