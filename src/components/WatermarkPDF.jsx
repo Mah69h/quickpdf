@@ -8,9 +8,6 @@ import {
 
 export default function WatermarkPDF() {
 
-  const [mosaic, setMosaic] =
-  useState(false);
-
   const [file, setFile] =
     useState(null);
 
@@ -28,6 +25,12 @@ export default function WatermarkPDF() {
 
   const [opacity, setOpacity] =
     useState(0.3);
+    
+  const [thumbnail, setThumbnail] =
+  useState(null);
+
+  const [mosaic, setMosaic] =
+  useState(false);
 
   const inputRef = useRef(null);
 
@@ -252,18 +255,60 @@ if (mosaic) {
           "
         >
 
-          <input
-            ref={inputRef}
-            type="file"
-            accept="application/pdf"
-            className="hidden"
+<input
+  ref={inputRef}
+  type="file"
+  accept="application/pdf"
+  className="hidden"
 
-            onChange={(e) =>
-              setFile(
-                e.target.files[0]
-              )
-            }
-          />
+  onChange={async (e) => {
+
+    const selectedFile =
+      e.target.files[0];
+
+    if (!selectedFile) return;
+
+    setFile(selectedFile);
+
+    const buffer =
+      await selectedFile.arrayBuffer();
+
+    const pdf =
+      await pdfjsLib.getDocument({
+        data: buffer
+      }).promise;
+
+    const page =
+      await pdf.getPage(1);
+
+    const viewport =
+      page.getViewport({
+        scale: 0.5
+      });
+
+    const canvas =
+      document.createElement('canvas');
+
+    const context =
+      canvas.getContext('2d');
+
+    canvas.width =
+      viewport.width;
+
+    canvas.height =
+      viewport.height;
+
+    await page.render({
+      canvasContext: context,
+      viewport
+    }).promise;
+
+    setThumbnail(
+      canvas.toDataURL()
+    );
+
+  }}
+/>
 
           <div className="text-6xl mb-4">
             💧
@@ -356,6 +401,92 @@ if (mosaic) {
           </select>
 
           <div>
+
+            {thumbnail && (
+
+<div className="
+  bg-gray-900
+  border border-gray-700
+  rounded-2xl
+  p-6
+  flex justify-center
+">
+
+  <div className="relative">
+
+    <img
+      src={thumbnail}
+      alt="preview"
+      className="
+        w-48
+        rounded-lg
+      "
+    />
+
+    {mosaic ? (
+
+      Array.from({ length: 12 }).map(
+        (_, i) => (
+
+          <div
+            key={i}
+            className="
+              absolute
+              w-3 h-3
+              bg-red-500
+              rounded-full
+            "
+            style={{
+              left: `${15 + (i % 3) * 30}%`,
+              top: `${10 + Math.floor(i / 3) * 20}%`
+            }}
+          />
+
+        )
+      )
+
+    ) : (
+
+      <div
+        className="
+          absolute
+          w-4 h-4
+          bg-red-500
+          rounded-full
+          border-2 border-white
+        "
+        style={{
+          left:
+            position === 'top-left'
+              ? '15%'
+              : position === 'top-right'
+              ? '85%'
+              : position === 'bottom-left'
+              ? '15%'
+              : position === 'bottom-right'
+              ? '85%'
+              : '50%',
+
+          top:
+            position === 'top-left'
+              ? '15%'
+              : position === 'top-right'
+              ? '15%'
+              : position === 'bottom-left'
+              ? '85%'
+              : position === 'bottom-right'
+              ? '85%'
+              : '50%'
+        }}
+      />
+
+    )}
+
+  </div>
+
+</div>
+
+)}
 
             <p className="text-gray-400 mb-2">
   Font Size: {size}px
