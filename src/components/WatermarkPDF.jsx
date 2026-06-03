@@ -544,7 +544,7 @@ if (mosaic) {
 
           </div>
 
-<label className="text-gray-400 mb-2">
+<label className="flex items-center gap-3 text-gray-400 mb-2">
 
   <input
     type="checkbox"
