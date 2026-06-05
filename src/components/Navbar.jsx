@@ -100,46 +100,44 @@ cursor-pointer
 
           </nav>
 
-        </div>
+          {/* RIGHT */}
 
-        {/* RIGHT */}
-
-        <div
-          className="
-            flex items-center gap-5
-          "
-        >
-
-          <button
+          <div
             className="
-              text-gray-300
-              hover:text-white
-              text-sm font-medium
-              transition
+              flex items-center gap-5
             "
           >
-            Login
-          </button>
 
-          <button
-            className="
-              bg-red-600
-              hover:bg-red-700
-              text-white
-              px-5 py-2.5
-              rounded-xl
-              text-sm font-medium
-              transition
-              shadow-lg shadow-red-600/20
-            "
-          >
-            Sign up
-          </button>
+            <button
+              className="
+                text-gray-300
+                hover:text-white
+                text-sm font-medium
+                transition
+              "
+            >
+              Login
+            </button>
+
+            <button
+              className="
+                bg-red-600
+                hover:bg-red-700
+                text-white
+                px-5 py-2.5
+                rounded-xl
+                text-sm font-medium
+                transition
+                shadow-lg shadow-red-600/20
+              "
+            >
+              Sign up
+            </button>
+
+          </div>
 
         </div>
 
-      </div>
-
-    </header>
+      </header>
   );
 }
