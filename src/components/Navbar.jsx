@@ -23,19 +23,16 @@ export default function Navbar() {
         "
       >
 
-        {/* LEFT */}
-
-        <div className="flex items-center gap-10">
-
-          <img
-            src={logo}
-            alt="QuickPDF"
-            className="
-              h-12
-              object-contain
-              cursor-pointer
-            "
-          />
+{/* LOGO */}
+ <img 
+src={logo} 
+alt="QuickPDF"
+className=" 
+w-[300px] 
+object-contain
+cursor-pointer 
+-ml-12 "
+/>
 
           <nav
             className="
@@ -57,7 +54,7 @@ export default function Navbar() {
                   transition
                 "
               >
-                Tools
+                ALL PDF TOOLS
                 <span>▾</span>
               </button>
 
@@ -74,7 +71,7 @@ export default function Navbar() {
                 transition
               "
             >
-              Pricing
+              PRICING
             </a>
 
             <a
@@ -86,7 +83,7 @@ export default function Navbar() {
                 transition
               "
             >
-              About Us
+              ABOUT US
             </a>
 
             <a
@@ -98,7 +95,7 @@ export default function Navbar() {
                 transition
               "
             >
-              Contact
+              CONTACT
             </a>
 
           </nav>
@@ -112,20 +109,6 @@ export default function Navbar() {
             flex items-center gap-5
           "
         >
-
-          {/* SEARCH */}
-
-          <button
-            className="
-              hidden md:flex
-              text-xl
-              text-gray-400
-              hover:text-white
-              transition
-            "
-          >
-            🔍
-          </button>
 
           <button
             className="
