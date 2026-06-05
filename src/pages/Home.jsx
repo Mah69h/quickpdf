@@ -124,6 +124,12 @@ export default function Home() {
   icon: '🧹',
   path: '/metadata-remover-pdf',
   tool: 'metadata-remover-pdf'
+},
+    {
+  title: 'Crop PDF',
+  icon: '✂️',
+  path: '/crop-pdf',
+  tool: 'crop-pdf'
 }
 
   ];

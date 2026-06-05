@@ -27,6 +27,7 @@ import WatermarkPDF from './components/WatermarkPDF';
 import PageNumbersPDF from './components/PageNumbersPDF';
 import ReorderPagesPDF from './components/ReorderPagesPDF';
 import MetadataRemoverPDF from './components/MetadataRemoverPDF';
+import CropPDF from './components/CropPDF';
 
 function App() {
 
@@ -132,6 +133,11 @@ function App() {
       <Route
         path="/metadata-remover-pdf"
         element={<MetadataRemoverPDF />}
+      />
+
+      <Route
+        path="/crop-pdf"
+        element={<CropPDF />}
       />
 
     </Routes>
