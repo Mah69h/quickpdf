@@ -4,47 +4,69 @@ export default function Navbar() {
 
   return (
 
-    <header className="
-      sticky top-0 z-50
-      w-full
-      bg-[#0b1120]/95
-      backdrop-blur-md
-      border-b border-white/5
-    ">
+    <header
+      className="
+        sticky top-0 z-50
+        w-full
+        bg-[#0b1120]/95
+        backdrop-blur-md
+        border-b border-white/5
+      "
+    >
 
-      <div className="
-  w-full
-  pl-0 pr-2 md:pl-0 md:pr-5
-  h-[72px]
-  flex items-center justify-between
-">
+      <div
+        className="
+          w-full
+          h-[72px]
+          px-6 lg:px-8
+          flex items-center justify-between
+        "
+      >
 
-        {/* LEFT SIDE */}
+        {/* LEFT */}
 
-        <div className="flex items-center gap-4">
-
-          {/* LOGO */}
+        <div className="flex items-center gap-10">
 
           <img
             src={logo}
             alt="QuickPDF"
             className="
-              w-[300px]
+              h-12
               object-contain
               cursor-pointer
-              -ml-12
             "
           />
 
-          {/* NAV LINKS */}
+          <nav
+            className="
+              hidden md:flex
+              items-center gap-8
+            "
+          >
 
-          <nav className="
-            hidden md:flex
-            items-center gap-10
-          ">
+            {/* TOOLS */}
+
+            <div className="relative group">
+
+              <button
+                className="
+                  flex items-center gap-2
+                  text-sm font-medium
+                  text-gray-300
+                  hover:text-white
+                  transition
+                "
+              >
+                Tools
+                <span>▾</span>
+              </button>
+
+              {/* MEGA MENU COMING NEXT */}
+
+            </div>
 
             <a
-              href="#tools"
+              href="/pricing"
               className="
                 text-sm font-medium
                 text-gray-300
@@ -52,11 +74,11 @@ export default function Navbar() {
                 transition
               "
             >
-              MERGE PDF
+              Pricing
             </a>
 
             <a
-              href="#tools"
+              href="/about"
               className="
                 text-sm font-medium
                 text-gray-300
@@ -64,11 +86,11 @@ export default function Navbar() {
                 transition
               "
             >
-              SPLIT PDF
+              About Us
             </a>
 
             <a
-              href="#tools"
+              href="/contact"
               className="
                 text-sm font-medium
                 text-gray-300
@@ -76,30 +98,34 @@ export default function Navbar() {
                 transition
               "
             >
-              COMPRESS PDF
-            </a>
-
-            <a
-              href="#tools"
-              className="
-                text-sm font-medium
-                text-gray-300
-                hover:text-white
-                transition
-              "
-            >
-              CONVERT PDF
+              Contact
             </a>
 
           </nav>
 
         </div>
 
-        {/* RIGHT SIDE */}
+        {/* RIGHT */}
 
-        <div className="
-          flex items-center gap-5
-        ">
+        <div
+          className="
+            flex items-center gap-5
+          "
+        >
+
+          {/* SEARCH */}
+
+          <button
+            className="
+              hidden md:flex
+              text-xl
+              text-gray-400
+              hover:text-white
+              transition
+            "
+          >
+            🔍
+          </button>
 
           <button
             className="
@@ -115,7 +141,8 @@ export default function Navbar() {
           <button
             className="
               bg-red-600
-              hover:bg-red-700 text-white
+              hover:bg-red-700
+              text-white
               px-5 py-2.5
               rounded-xl
               text-sm font-medium
