@@ -118,6 +118,12 @@ export default function Home() {
   icon: '📑',
   path: '/reorder-pages-pdf',
   tool: 'reorder-pages-pdf'
+},
+    {
+  title: 'Metadata Remover PDF',
+  icon: '🧹',
+  path: '/metadata-remover-pdf',
+  tool: 'metadata-remover-pdf'
 }
 
   ];

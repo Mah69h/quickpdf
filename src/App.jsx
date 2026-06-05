@@ -26,6 +26,7 @@ import ExtractPages from './components/ExtractPages';
 import WatermarkPDF from './components/WatermarkPDF';
 import PageNumbersPDF from './components/PageNumbersPDF';
 import ReorderPagesPDF from './components/ReorderPagesPDF';
+import MetadataRemoverPDF from './components/MetadataRemoverPDF';
 
 function App() {
 
@@ -126,6 +127,11 @@ function App() {
       <Route
         path="/reorder-pages-pdf"
         element={<ReorderPagesPDF />}
+      />
+
+      <Route
+        path="/metadata-remover-pdf"
+        element={<MetadataRemoverPDF />}
       />
 
     </Routes>
