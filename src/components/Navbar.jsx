@@ -25,7 +25,7 @@ export default function Navbar() {
 
 {/* LEFT SECTION */}
 
- <div className="flex items-center"></div>
+<div className="flex items-center gap-8">
 
  <img 
 src={logo} 
@@ -42,7 +42,7 @@ cursor-pointer
         hidden md:flex
         items-center
         gap-10
-        ml-4
+        ml-20
       "
     >
             <div className="relative group">
