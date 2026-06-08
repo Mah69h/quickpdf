@@ -61,7 +61,144 @@ cursor-pointer
               </button>
 
               {/* MEGA MENU COMING NEXT */}
+<div
+  className="
+    absolute top-full left-0
+    mt-4
+    w-[800px]
+    bg-[#111827]
+    border border-gray-800
+    rounded-3xl
+    p-8
+    shadow-2xl
+    opacity-0 invisible
+    group-hover:opacity-100
+    group-hover:visible
+    transition-all duration-200
+  "
+>
 
+  <div className="grid grid-cols-4 gap-8">
+
+    {/* ORGANIZE */}
+
+    <div>
+
+      <h3 className="text-red-500 font-semibold mb-4">
+        ORGANIZE
+      </h3>
+
+      <div className="space-y-3 text-sm">
+
+        <a href="/merge-pdf" className="block text-gray-300 hover:text-white">
+          Merge PDF
+        </a>
+
+        <a href="/split-pdf" className="block text-gray-300 hover:text-white">
+          Split PDF
+        </a>
+
+        <a href="/delete-pages" className="block text-gray-300 hover:text-white">
+          Delete Pages
+        </a>
+
+        <a href="/extract-pages" className="block text-gray-300 hover:text-white">
+          Extract Pages
+        </a>
+
+        <a href="/reorder-pages-pdf" className="block text-gray-300 hover:text-white">
+          Reorder Pages
+        </a>
+
+      </div>
+
+    </div>
+
+    {/* CONVERT */}
+
+    <div>
+
+      <h3 className="text-red-500 font-semibold mb-4">
+        CONVERT
+      </h3>
+
+      <div className="space-y-3 text-sm">
+
+        <a href="/jpg-to-pdf" className="block text-gray-300 hover:text-white">
+          JPG to PDF
+        </a>
+
+        <a href="/pdf-to-jpg" className="block text-gray-300 hover:text-white">
+          PDF to JPG
+        </a>
+
+        <a href="/word-to-pdf" className="block text-gray-300 hover:text-white">
+          Word to PDF
+        </a>
+
+        <a href="/pdf-to-word" className="block text-gray-300 hover:text-white">
+          PDF to Word
+        </a>
+
+      </div>
+
+    </div>
+
+    {/* EDIT */}
+
+    <div>
+
+      <h3 className="text-red-500 font-semibold mb-4">
+        EDIT
+      </h3>
+
+      <div className="space-y-3 text-sm">
+
+        <a href="/watermark-pdf" className="block text-gray-300 hover:text-white">
+          Watermark PDF
+        </a>
+
+        <a href="/page-numbers-pdf" className="block text-gray-300 hover:text-white">
+          Page Numbers
+        </a>
+
+        <a href="/crop-pdf" className="block text-gray-300 hover:text-white">
+          Crop PDF
+        </a>
+
+        <a href="/rotate-pdf" className="block text-gray-300 hover:text-white">
+          Rotate PDF
+        </a>
+
+      </div>
+
+    </div>
+
+    {/* OPTIMIZE */}
+
+    <div>
+
+      <h3 className="text-red-500 font-semibold mb-4">
+        OPTIMIZE
+      </h3>
+
+      <div className="space-y-3 text-sm">
+
+        <a href="/compress-pdf" className="block text-gray-300 hover:text-white">
+          Compress PDF
+        </a>
+
+        <a href="/metadata-remover-pdf" className="block text-gray-300 hover:text-white">
+          Metadata Remover
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
             </div>
 
             <a
