@@ -31,10 +31,11 @@ export default function Navbar() {
 src={logo} 
 alt="QuickPDF"
 className=" 
-w-[300px] 
+w-[220px] 
 object-contain
 cursor-pointer 
--ml-12 "
+-ml-4 
+"
 />
 
     <nav
@@ -42,7 +43,7 @@ cursor-pointer
         hidden md:flex
         items-center
         gap-10
-        ml-20
+        ml-6
       "
     >
             <div className="relative group">
