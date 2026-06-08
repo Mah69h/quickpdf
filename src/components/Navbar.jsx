@@ -42,7 +42,7 @@ cursor-pointer
     className="
       hidden md:flex
       items-center
-      gap-10
+      gap-14
     "
   >
             <div className="relative group">
