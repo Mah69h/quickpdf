@@ -25,7 +25,7 @@ export default function Navbar() {
 
 {/* LEFT SECTION */}
 
-<div className="flex items-center gap-3">
+<div className="flex items-center gap-1">
 
  <img 
 src={logo} 
@@ -34,7 +34,7 @@ className="
 w-[300px] 
 object-contain
 cursor-pointer 
--ml-12 
+-ml-20 
 "
 />
 
