@@ -166,6 +166,7 @@ export default function Home() {
             to={item.path}
 
             className="
+              group
               bg-gray-900
               border border-gray-800
               hover:border-red-500
@@ -178,11 +179,19 @@ export default function Home() {
             "
           >
 
-            <div className="text-5xl mb-5">
+            <div className="
+    text-5xl mb-5
+    transition-transform duration-300
+    group-hover:scale-110
+  ">
               {item.icon}
             </div>
 
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="
+    text-2xl font-semibold mb-2
+    transition-colors duration-300
+    group-hover:text-red-400
+  ">
               {item.title}
             </h2>
 
