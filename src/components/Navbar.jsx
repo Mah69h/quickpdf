@@ -34,14 +34,7 @@ cursor-pointer
 -ml-12 "
 />
 
-          <nav
-            className="
-              hidden md:flex
-              items-center gap-8
-              -ml-7
-            "
-          >
-            </nav>
+<nav className="hidden md:flex items-center gap-8 -ml-32">
 
             {/* TOOLS */}
 
