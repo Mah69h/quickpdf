@@ -34,7 +34,7 @@ cursor-pointer
 -ml-12 "
 />
 
-<nav className="hidden md:flex items-center gap-8 -ml-100">
+<nav className=" hidden md:flex items-center gap-10 ">
 
             {/* TOOLS */}
 
