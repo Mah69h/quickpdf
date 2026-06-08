@@ -31,10 +31,10 @@ export default function Navbar() {
 src={logo} 
 alt="QuickPDF"
 className=" 
-w-[300px] 
+w-[220px] 
 object-contain
 cursor-pointer 
--ml-14 
+-ml-20 
 "
 />
 
