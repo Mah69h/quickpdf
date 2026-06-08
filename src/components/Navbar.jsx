@@ -41,6 +41,7 @@ cursor-pointer
               -ml-7
             "
           >
+            </nav>
 
             {/* TOOLS */}
 
