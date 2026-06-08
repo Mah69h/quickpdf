@@ -25,13 +25,13 @@ export default function Navbar() {
 
 {/* LEFT SECTION */}
 
-<div className="flex items-center gap-8">
+<div className="flex items-center gap-3">
 
  <img 
 src={logo} 
 alt="QuickPDF"
 className=" 
-w-[220px] 
+w-[300px] 
 object-contain
 cursor-pointer 
 -ml-20 
