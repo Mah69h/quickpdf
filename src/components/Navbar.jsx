@@ -25,7 +25,7 @@ export default function Navbar() {
 
 {/* LEFT SECTION */}
 
-<div className="flex items-center gap-8">
+<div className="flex items-center gap-8"></div>
 
  <img 
 src={logo} 
