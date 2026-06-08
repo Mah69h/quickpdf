@@ -6,6 +6,8 @@ import {
   degrees
 } from 'pdf-lib';
 
+import ToolLayout from '../components/ToolLayout';
+
 import * as pdfjsLib from 'pdfjs-dist';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -237,6 +239,7 @@ if (mosaic) {
     };
 
   return (
+    <ToolLayout title="Watermark PDF">
 
     <div className="w-full max-w-2xl mx-auto text-center">
 
@@ -656,5 +659,7 @@ if (mosaic) {
       )}
 
     </div>
+    </ToolLayout>
+
   );
 }
