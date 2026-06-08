@@ -4,6 +4,8 @@ import { PDFDocument } from 'pdf-lib';
 
 import * as pdfjsLib from 'pdfjs-dist';
 
+import ToolWorkspace from '../components/ToolWorkspace';
+
 import {
   DndContext,
   closestCenter
@@ -746,7 +748,7 @@ const addFiles = async (newFiles) => {
         </div>
 
       </div>
-      
+
     </ToolWorkspace>
   );
 }
