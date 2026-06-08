@@ -437,13 +437,55 @@ const addFiles = async (newFiles) => {
 
   return (
 
-    <div className="w-full max-w-2xl mx-auto text-center">
+  <ToolWorkspace
+    title="Merge PDF"
 
-      {/* HEADER */}
+    sidebar={
 
-      <h2 className="text-3xl font-bold text-white mb-6">
-        Merge PDF
-      </h2>
+      <div className="space-y-6">
+
+        <h2 className="text-2xl font-bold">
+          Merge PDF
+        </h2>
+
+        <div
+          className="
+            bg-blue-500/10
+            border border-blue-500/20
+            rounded-xl
+            p-4
+            text-sm
+            text-blue-300
+          "
+        >
+          Upload multiple PDFs and arrange
+          them in the order you want.
+        </div>
+
+        <button
+          className="
+            w-full
+            bg-red-600
+            hover:bg-red-700
+            py-4
+            rounded-xl
+            font-semibold
+          "
+        >
+          Merge PDF
+        </button>
+
+      </div>
+
+    }
+
+  >
+
+    {/* LEFT SIDE CONTENT GOES HERE */}
+
+  </ToolWorkspace>
+
+);
 
 {/* UPLOAD AREA */}
 
