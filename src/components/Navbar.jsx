@@ -38,7 +38,7 @@ cursor-pointer
             className="
               hidden md:flex
               items-center gap-8
-              ml-1
+              -ml-32
             "
           >
 
