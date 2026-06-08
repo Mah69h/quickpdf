@@ -34,7 +34,7 @@ className="
 w-[300px] 
 object-contain
 cursor-pointer 
--ml-12 
+-ml-14 
 "
 />
 
