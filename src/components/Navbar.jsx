@@ -25,27 +25,26 @@ export default function Navbar() {
 
 {/* LEFT SECTION */}
 
-<div className="flex items-center gap-8"></div>
+<div className="flex items-center gap-8">
 
  <img 
 src={logo} 
 alt="QuickPDF"
 className=" 
-w-[220px] 
+w-[300px] 
 object-contain
 cursor-pointer 
 -ml-4 
 "
 />
 
-    <nav
-      className="
-        hidden md:flex
-        items-center
-        gap-10
-        ml-6
-      "
-    >
+  <nav
+    className="
+      hidden md:flex
+      items-center
+      gap-10
+    "
+  >
             <div className="relative group">
 
               <button
@@ -101,7 +100,9 @@ cursor-pointer
               CONTACT
             </a>
 
-          </nav>
+                </nav>
+
+</div>
 
           {/* RIGHT */}
 
