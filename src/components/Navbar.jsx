@@ -37,7 +37,7 @@ cursor-pointer
           <nav
             className="
               hidden md:flex
-              items-center gap-4
+              items-center gap-2
             "
           >
 
