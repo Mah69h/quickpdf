@@ -58,16 +58,25 @@ function SortableItem({
     >
 
       <div
-        className="flex items-center gap-4 flex-1 cursor-grab"
-        {...attributes}
-        {...listeners}
-      >
-
-        <img
-          src={fileData.thumbnail}
-          alt="PDF Preview"
-          className="w-20 h-28 object-cover rounded-lg border border-gray-700"
-        />
+         className="
+    h-80
+    bg-gray-800
+    rounded-xl
+    overflow-hidden
+    flex
+    items-center
+    justify-center
+    mb-4
+  "
+>
+  <img
+    src={fileData.thumbnail}
+    alt=""
+    className="
+      max-h-full
+      object-contain
+    "
+  />
 
         <div className="text-left flex-1 min-w-0">
 
@@ -444,22 +453,32 @@ const addFiles = async (newFiles) => {
 
     sidebar={
 
-      <div className="space-y-6">
+<div
+  className="
+    mt-6
+    flex
+    flex-wrap
+    gap-6
+    justify-center
+  "
+>
 
         <h2 className="text-2xl font-bold">
           Merge PDF
         </h2>
 
-        <div
-          className="
-            bg-blue-500/10
-            border border-blue-500/20
-            rounded-xl
-            p-4
-            text-sm
-            text-blue-300
-          "
-        >
+<div
+  className="
+    w-72
+    bg-gray-900
+    border border-gray-800
+    rounded-2xl
+    p-4
+    hover:border-red-500
+    transition
+    cursor-grab
+  "
+>
           Upload multiple PDFs and arrange
           them in the order you want.
         </div>
