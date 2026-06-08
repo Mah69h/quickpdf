@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
 export default function Navbar() {
@@ -90,25 +91,25 @@ cursor-pointer
 
       <div className="space-y-3 text-sm">
 
-        <a href="/merge-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/merge-pdf" className="block text-gray-300 hover:text-white">
           Merge PDF
-        </a>
+        </Link>
 
-        <a href="/split-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/split-pdf" className="block text-gray-300 hover:text-white">
           Split PDF
-        </a>
+        </Link>
 
-        <a href="/delete-pages" className="block text-gray-300 hover:text-white">
+        <Link to="/delete-pages" className="block text-gray-300 hover:text-white">
           Delete Pages
-        </a>
+        </Link>
 
-        <a href="/extract-pages" className="block text-gray-300 hover:text-white">
+        <Link to="/extract-pages" className="block text-gray-300 hover:text-white">
           Extract Pages
-        </a>
+        </Link>
 
-        <a href="/reorder-pages-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/reorder-pages-pdf" className="block text-gray-300 hover:text-white">
           Reorder Pages
-        </a>
+        </Link>
 
       </div>
 
@@ -124,21 +125,21 @@ cursor-pointer
 
       <div className="space-y-3 text-sm">
 
-        <a href="/jpg-to-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/jpg-to-pdf" className="block text-gray-300 hover:text-white">
           JPG to PDF
-        </a>
+        </Link>
 
-        <a href="/pdf-to-jpg" className="block text-gray-300 hover:text-white">
+        <Link to="/pdf-to-jpg" className="block text-gray-300 hover:text-white">
           PDF to JPG
-        </a>
+        </Link>
 
-        <a href="/word-to-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/word-to-pdf" className="block text-gray-300 hover:text-white">
           Word to PDF
-        </a>
+        </Link>
 
-        <a href="/pdf-to-word" className="block text-gray-300 hover:text-white">
+        <Link to="/pdf-to-word" className="block text-gray-300 hover:text-white">
           PDF to Word
-        </a>
+        </Link>
 
       </div>
 
@@ -154,21 +155,21 @@ cursor-pointer
 
       <div className="space-y-3 text-sm">
 
-        <a href="/watermark-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/watermark-pdf" className="block text-gray-300 hover:text-white">
           Watermark PDF
-        </a>
+        </Link>
 
-        <a href="/page-numbers-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/page-numbers-pdf" className="block text-gray-300 hover:text-white">
           Page Numbers
-        </a>
+        </Link>
 
-        <a href="/crop-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/crop-pdf" className="block text-gray-300 hover:text-white">
           Crop PDF
-        </a>
+        </Link>
 
-        <a href="/rotate-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/rotate-pdf" className="block text-gray-300 hover:text-white">
           Rotate PDF
-        </a>
+        </Link>
 
       </div>
 
@@ -184,13 +185,13 @@ cursor-pointer
 
       <div className="space-y-3 text-sm">
 
-        <a href="/compress-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/compress-pdf" className="block text-gray-300 hover:text-white">
           Compress PDF
-        </a>
+        </Link>
 
-        <a href="/metadata-remover-pdf" className="block text-gray-300 hover:text-white">
+        <Link to="/metadata-remover-pdf" className="block text-gray-300 hover:text-white">
           Metadata Remover
-        </a>
+        </Link>
 
       </div>
 
