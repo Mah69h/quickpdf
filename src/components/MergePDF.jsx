@@ -481,11 +481,6 @@ const addFiles = async (newFiles) => {
 
   >
 
-    {/* LEFT SIDE CONTENT GOES HERE */}
-
-  </ToolWorkspace>
-
-);
 
 {/* UPLOAD AREA */}
 
@@ -751,7 +746,7 @@ const addFiles = async (newFiles) => {
         </div>
 
       </div>
-
-    </div>
+      
+    </ToolWorkspace>
   );
 }
