@@ -19,22 +19,7 @@ export default function ToolWorkspace({
           text-white
         "
       >
-
-        <div className="border-b border-white/10">
-
-          <h1
-            className="
-              text-4xl
-              font-bold
-              text-center
-              py-8
-            "
-          >
-            {title}
-          </h1>
-
-        </div>
-
+        
         <div
           className="
             flex
