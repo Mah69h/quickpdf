@@ -44,14 +44,19 @@ export default function ToolWorkspace({
 
           {/* LEFT WORKSPACE */}
 
-          <div
-            className="
-              flex-1
-              p-8
-            "
-          >
-            {children}
-          </div>
+<div
+  className="
+    flex-1
+    min-h-screen
+    p-8
+    bg-gradient-to-br
+    from-[#071024]
+    via-[#0b1630]
+    to-[#091120]
+  "
+>
+  {children}
+</div>
 
           {/* RIGHT PANEL */}
 

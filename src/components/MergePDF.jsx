@@ -51,45 +51,56 @@ function SortableItem({
 
   return (
 
-    <div
-      ref={setNodeRef}
-      style={style}
-      className="flex items-center justify-between bg-gray-900 border border-gray-800 rounded-2xl p-4"
-    >
+<div
+  ref={setNodeRef}
+  style={style}
+  {...attributes}
+  {...listeners}
+  className="
+    w-72
+    bg-[#111827]
+    border border-white/10
+    rounded-2xl
+    p-4
+    hover:border-red-500
+    transition
+    cursor-grab
+  "
+>
 
-      <div
-         className="
-    h-80
-    bg-gray-800
+<div
+  className="
+    h-[420px]
     rounded-xl
     overflow-hidden
+    bg-white
     flex
     items-center
     justify-center
-    mb-4
   "
 >
   <img
     src={fileData.thumbnail}
     alt=""
-    className="
-      max-h-full
-      object-contain
-    "
+    className="w-full h-full object-contain"
   />
 
         <div className="text-left flex-1 min-w-0">
 
-          <p className="text-white font-medium truncate">
-            {fileData.file.name}
-          </p>
+<h3
+  className="
+    mt-4
+    text-white
+    font-medium
+    truncate
+  "
+>
+  {fileData.file.name}
+</h3>
 
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-400 text-sm">
 
-            {(
-              fileData.file.size /
-              (1024 * 1024)
-            ).toFixed(2)} MB
+ {(fileData.file.size / 1024 / 1024).toFixed(2)} MB
 
             {fileData.pageCount && (
               <> • {fileData.pageCount} pages</>
@@ -101,14 +112,20 @@ function SortableItem({
 
       </div>
 
-      <button
-        onClick={() =>
-          removeFile(index)
-        }
-        className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl text-white transition ml-4"
-      >
-        Remove
-      </button>
+<button
+  onClick={() => removeFile(fileData.id)}
+  className="
+    mt-4
+    w-full
+    py-2
+    rounded-lg
+    bg-red-600
+    hover:bg-red-700
+    text-white
+  "
+>
+  Remove
+</button>
 
     </div>
   );
@@ -568,25 +585,23 @@ const addFiles = async (newFiles) => {
 
 ) : (
 
-  <div className="flex justify-end mb-5">
+  <div className="flex justify-end mb-10">
 
     <button
       onClick={() =>
         inputRef.current?.click()
       }
 
-      className="
-        group
-        flex items-center gap-3
-        bg-gray-900
-        border border-gray-800
-        hover:border-red-500
-        hover:bg-gray-800
-        px-5 py-3
-        rounded-2xl
-        transition-all duration-200
-        shadow-lg
-      "
+className="
+group
+flex items-center gap-3
+bg-[#111827]
+border border-white/10
+hover:border-red-500
+px-5 py-3
+rounded-2xl
+shadow-xl
+"
     >
 
      <div
@@ -646,7 +661,14 @@ const addFiles = async (newFiles) => {
 
       {files.length > 0 && (
 
-        <div className="mt-6 space-y-4">
+<div
+  className="
+    mt-6
+    flex
+    flex-wrap
+    gap-8
+  "
+>
 
           <DndContext
             collisionDetection={
