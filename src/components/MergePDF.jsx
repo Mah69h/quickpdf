@@ -508,34 +508,35 @@ const addFiles = async (newFiles) => {
 {files.length === 0 ? (
 
   <div
-    onClick={() =>
-      inputRef.current?.click()
-    }
+    onClick={() => inputRef.current?.click()}
 
     onDragOver={(e) => {
-
       e.preventDefault();
-
       setIsDragOver(true);
     }}
 
-    onDragLeave={() =>
-      setIsDragOver(false)
-    }
+    onDragLeave={() => setIsDragOver(false)}
 
     onDrop={handleDrop}
 
-className={`w-full h-[420px]
-  border-2 border-dashed
-  rounded-3xl
-  cursor-pointer
-  transition-all duration-200
-  flex items-center justify-center
-  ${
-    isDragOver
-      ? 'border-red-500 bg-gray-900'
-      : 'border-gray-700 bg-gray-900 hover:border-red-500'
-  }`}
+    className={`
+      w-full
+      h-[420px]
+      border-2
+      border-dashed
+      rounded-3xl
+      cursor-pointer
+      transition-all
+      duration-200
+      flex
+      items-center
+      justify-center
+      ${
+        isDragOver
+          ? "border-red-500 bg-gray-900"
+          : "border-gray-700 bg-gray-900 hover:border-red-500"
+      }
+    `}
   >
 
     <input
@@ -546,33 +547,29 @@ className={`w-full h-[420px]
       className="hidden"
 
       onChange={async (e) => {
-
-        const selectedFiles =
-          Array.from(
-            e.target.files
-          );
-
-        await addFiles(
-          selectedFiles
-        );
+        const selectedFiles = Array.from(e.target.files);
+        await addFiles(selectedFiles);
+        e.target.value = "";
       }}
     />
 
-<div className="text-center">
+    {/* CENTERED UPLOAD CONTENT */}
 
-  <div className="text-6xl mb-5">
-    📄
-  </div>
+    <div className="flex flex-col items-center justify-center text-center">
 
-  <p className="text-2xl text-white font-semibold">
-    Drag & drop PDFs here
-  </p>
+      <div className="text-6xl mb-5">
+        📄
+      </div>
 
-  <p className="text-sm text-gray-500 mt-3">
-    Fast • Secure • Local Processing
-  </p>
+      <p className="text-2xl text-white font-semibold">
+        Drag & drop PDFs here
+      </p>
 
-</div>
+      <p className="text-sm text-gray-500 mt-3">
+        Fast • Secure • Local Processing
+      </p>
+
+    </div>
 
   </div>
 
