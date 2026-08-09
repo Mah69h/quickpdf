@@ -277,6 +277,11 @@ function SortablePDFCard({
 // ============================================================
 
 export default function MergePDF() {
+  return (
+    <div className="text-6xl text-red-500 p-20">
+      THIS IS THE REAL MERGE PDF
+    </div>
+  );
 
   const [files, setFiles] = useState([]);
 
