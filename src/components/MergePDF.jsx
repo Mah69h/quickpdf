@@ -9,14 +9,14 @@ import ToolWorkspace from '../components/ToolWorkspace';
 import {
   DndContext,
   closestCenter
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 
 import {
   SortableContext,
-  verticalListSortingStrategy,
   useSortable,
+  verticalListSortingStrategy,
   arrayMove
-} from '@dnd-kit/sortable';
+} from "@dnd-kit/sortable";
 
 import { CSS } from '@dnd-kit/utilities';
 
@@ -27,88 +27,217 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 // SORTABLE ITEM
 // ─────────────────────────────────────────────
 
-function SortableItem({
+function SortablePDFCard({
   fileData,
   index,
   removeFile
 }) {
-
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
-    transition
+    transition,
+    isDragging
   } = useSortable({
     id: fileData.id
   });
 
   const style = {
-    transform:
-      CSS.Transform.toString(transform),
-    transition
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 1
   };
 
   return (
-
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between bg-gray-900 border border-gray-800 rounded-2xl p-4"
+      className={`
+        group
+        relative
+        w-full
+        bg-[#111827]
+        border
+        rounded-2xl
+        overflow-hidden
+        transition-all
+        duration-200
+        ${
+          isDragging
+            ? "border-red-500 shadow-2xl scale-[1.01]"
+            : "border-gray-800 hover:border-gray-700"
+        }
+      `}
     >
 
-      <div
-         className="
-    h-80
-    bg-gray-800
-    rounded-xl
-    overflow-hidden
-    flex
-    items-center
-    justify-center
-    mb-4
-  "
->
-  <img
-    src={fileData.thumbnail}
-    alt=""
-    className="
-      max-h-full
-      object-contain
-    "
-  />
+      {/* DOCUMENT ROW */}
+      <div className="flex items-center gap-6 p-5">
 
-        <div className="text-left flex-1 min-w-0">
+        {/* NUMBER */}
+        <div className="
+          w-9
+          h-9
+          rounded-xl
+          bg-red-600
+          flex
+          items-center
+          justify-center
+          text-sm
+          font-bold
+          text-white
+          flex-shrink-0
+        ">
+          {index + 1}
+        </div>
 
-          <p className="text-white font-medium truncate">
-            {fileData.file.name}
+
+        {/* PDF PREVIEW */}
+        <div className="
+          w-[150px]
+          h-[190px]
+          bg-[#0a0f1c]
+          rounded-xl
+          border
+          border-gray-800
+          flex
+          items-center
+          justify-center
+          overflow-hidden
+          flex-shrink-0
+        ">
+
+          {fileData.thumbnail ? (
+            <img
+              src={fileData.thumbnail}
+              alt={
+                fileData.file?.name ||
+                "PDF preview"
+              }
+              className="
+                max-w-full
+                max-h-full
+                object-contain
+                shadow-xl
+              "
+            />
+          ) : (
+            <div className="text-center">
+              <div className="text-4xl mb-2">
+                📄
+              </div>
+
+              <p className="text-xs text-gray-500">
+                PDF
+              </p>
+            </div>
+          )}
+
+        </div>
+
+
+        {/* FILE INFORMATION */}
+        <div className="flex-1 min-w-0">
+
+          <p
+            className="
+              text-base
+              font-semibold
+              text-white
+              truncate
+              mb-2
+            "
+            title={fileData.file?.name}
+          >
+            {fileData.file?.name ||
+              "Untitled PDF"}
           </p>
 
-          <p className="text-gray-500 text-sm mt-1">
 
-            {(
-              fileData.file.size /
-              (1024 * 1024)
-            ).toFixed(2)} MB
+          <div className="
+            flex
+            items-center
+            gap-3
+            text-sm
+            text-gray-500
+          ">
 
-            {fileData.pageCount && (
-              <> • {fileData.pageCount} pages</>
-            )}
+            <span>
+              {fileData.file
+                ? `${(
+                    fileData.file.size /
+                    1024 /
+                    1024
+                  ).toFixed(2)} MB`
+                : ""}
+            </span>
 
+            <span>•</span>
+
+            <span>
+              {fileData.pageCount || 0}{" "}
+              {fileData.pageCount === 1
+                ? "page"
+                : "pages"}
+            </span>
+
+          </div>
+
+
+          {/* DRAG INSTRUCTION */}
+          <p className="
+            text-xs
+            text-gray-600
+            mt-4
+          ">
+            Drag to change order
           </p>
 
         </div>
 
-      </div>
 
-      <button
-        onClick={() =>
-          removeFile(index)
-        }
-        className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl text-white transition ml-4"
-      >
-        Remove
-      </button>
+        {/* DRAG HANDLE */}
+        <button
+          {...attributes}
+          {...listeners}
+          className="
+            cursor-grab
+            active:cursor-grabbing
+            text-gray-500
+            hover:text-white
+            px-3
+            py-2
+            text-xl
+            transition
+          "
+          title="Drag to reorder"
+        >
+          ⋮⋮
+        </button>
+
+
+        {/* REMOVE */}
+        <button
+          onClick={() =>
+            removeFile(fileData.id)
+          }
+          className="
+            px-5
+            py-3
+            rounded-xl
+            text-sm
+            font-medium
+            bg-red-600
+            text-white
+            hover:bg-red-500
+            transition
+            flex-shrink-0
+          "
+        >
+          Remove
+        </button>
+
+      </div>
 
     </div>
   );
@@ -281,15 +410,16 @@ const addFiles = async (newFiles) => {
   // REMOVE FILE
   // ─────────────────────────────────────────────
 
-  const removeFile = (index) => {
+const removeFile = (id) => {
 
-    const updated =
-      files.filter(
-        (_, i) => i !== index
-      );
+  setFiles((prev) =>
+    prev.filter(
+      (fileData) =>
+        fileData.id !== id
+    )
+  );
 
-    setFiles(updated);
-  };
+};
 
   // ─────────────────────────────────────────────
   // DRAG SORT
@@ -447,334 +577,393 @@ const addFiles = async (newFiles) => {
   // ─────────────────────────────────────────────
 
   return (
-
   <ToolWorkspace
-    title="Merge PDF"
-
+    title=""
     sidebar={
+      <div className="h-full flex flex-col px-7 py-8">
 
-<div
-  className="
-    mt-6
-    flex
-    flex-wrap
-    gap-6
-    justify-center
-  "
->
-
-        <h2 className="text-2xl font-bold">
+        {/* SIDEBAR TITLE */}
+        <h2 className="text-2xl font-bold text-white mb-7">
           Merge PDF
         </h2>
 
-<div
-  className="
-    w-72
-    bg-gray-900
-    border border-gray-800
-    rounded-2xl
-    p-4
-    hover:border-red-500
-    transition
-    cursor-grab
-  "
->
-          Upload multiple PDFs and arrange
-          them in the order you want.
+        {/* DESCRIPTION */}
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-5 mb-6">
+          <p className="text-blue-300 text-sm leading-6">
+            Upload multiple PDFs and arrange them
+            in the order you want.
+          </p>
         </div>
 
-        <button
-          className="
-            w-full
-            bg-red-600
-            hover:bg-red-700
-            py-4
-            rounded-xl
-            font-semibold
-          "
-        >
-          Merge PDF
-        </button>
+        {/* FILE STATS */}
+        {files.length > 0 && (
+          <div className="border border-gray-800 rounded-2xl p-5 mb-6 bg-gray-900/40">
+
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-gray-400 text-sm">
+                Files
+              </span>
+
+              <span className="text-white font-semibold">
+                {files.length}
+              </span>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-gray-400 text-sm">
+                Pages
+              </span>
+
+              <span className="text-white font-semibold">
+                {files.reduce(
+                  (total, fileData) =>
+                    total + (fileData.pageCount || 0),
+                  0
+                )}
+              </span>
+            </div>
+
+          </div>
+        )}
+
+        {/* MERGE BUTTON */}
+        <div className="mt-auto">
+
+          <button
+            onClick={mergePDFs}
+            disabled={loading || files.length === 0}
+            className={`
+              w-full
+              py-4
+              rounded-2xl
+              font-semibold
+              text-white
+              transition-all
+              duration-200
+              ${
+                loading || files.length === 0
+                  ? "bg-gray-700 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-500 shadow-lg shadow-red-600/20"
+              }
+            `}
+          >
+            {loading
+              ? `Processing ${progress}%`
+              : "Merge PDF"}
+          </button>
+
+          <div className="flex justify-center gap-4 mt-5 text-xs text-gray-600">
+            <span>🔒 Local</span>
+            <span>⚡ Fast</span>
+            <span>∞ No Limits</span>
+          </div>
+
+        </div>
 
       </div>
-
     }
-
   >
 
+    {/* ================================================= */}
+    {/* MAIN WORKSPACE */}
+    {/* ================================================= */}
 
-{/* UPLOAD AREA */}
+    <div className="h-full px-10 py-8">
 
-{files.length === 0 ? (
+      {/* ================================================= */}
+      {/* BEFORE UPLOAD */}
+      {/* ================================================= */}
 
-  <div
-    onClick={() => inputRef.current?.click()}
+      {files.length === 0 ? (
 
-    onDragOver={(e) => {
-      e.preventDefault();
-      setIsDragOver(true);
-    }}
+        <div className="h-full flex items-start justify-center">
 
-    onDragLeave={() => setIsDragOver(false)}
-
-    onDrop={handleDrop}
-
-    className={`
-      w-full
-      h-[420px]
-      border-2
-      border-dashed
-      rounded-3xl
-      cursor-pointer
-      transition-all
-      duration-200
-      flex
-      items-center
-      justify-center
-      ${
-        isDragOver
-          ? "border-red-500 bg-gray-900"
-          : "border-gray-700 bg-gray-900 hover:border-red-500"
-      }
-    `}
-  >
-
-    <input
-      ref={inputRef}
-      type="file"
-      multiple
-      accept="application/pdf"
-      className="hidden"
-
-      onChange={async (e) => {
-        const selectedFiles = Array.from(e.target.files);
-        await addFiles(selectedFiles);
-        e.target.value = "";
-      }}
-    />
-
-    {/* CENTERED UPLOAD CONTENT */}
-
-    <div className="flex flex-col items-center justify-center text-center">
-
-      <div className="text-6xl mb-5">
-        📄
-      </div>
-
-      <p className="text-2xl text-white font-semibold">
-        Drag & drop PDFs here
-      </p>
-
-      <p className="text-sm text-gray-500 mt-3">
-        Fast • Secure • Local Processing
-      </p>
-
-    </div>
-
-  </div>
-
-) : (
-
-  <div className="flex justify-end mb-5">
-
-    <button
-      onClick={() =>
-        inputRef.current?.click()
-      }
-
-      className="
-        group
-        flex items-center gap-3
-        bg-gray-900
-        border border-gray-800
-        hover:border-red-500
-        hover:bg-gray-800
-        px-5 py-3
-        rounded-2xl
-        transition-all duration-200
-        shadow-lg
-      "
-    >
-
-     <div
-  className="
-    w-10 h-10
-    rounded-xl
-    bg-red-600
-    group-hover:bg-red-500
-    flex items-center justify-center
-    transition
-  "
->
-
-  <span className="text-white text-3xl leading-none -mt-1">
-    +
-  </span>
-
-</div>
-
-      <div className="text-left">
-
-        <p className="text-white text-sm font-medium">
-          Add Files
-        </p>
-
-        <p className="text-gray-500 text-xs">
-          Add more PDFs
-        </p>
-
-      </div>
-
-    </button>
-
-    <input
-      ref={inputRef}
-      type="file"
-      multiple
-      accept="application/pdf"
-      className="hidden"
-
-      onChange={async (e) => {
-
-        const selectedFiles =
-          Array.from(
-            e.target.files
-          );
-
-        await addFiles(
-          selectedFiles
-        );
-      }}
-    />
-
-  </div>
-)}
-      {/* FILE LIST */}
-
-      {files.length > 0 && (
-
-        <div className="mt-6 space-y-4">
-
-          <DndContext
-            collisionDetection={
-              closestCenter
+          <div
+            onClick={() =>
+              inputRef.current?.click()
             }
 
-            onDragEnd={
-              handleDragEnd
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragOver(true);
+            }}
+
+            onDragLeave={() =>
+              setIsDragOver(false)
             }
+
+            onDrop={handleDrop}
+
+            className={`
+              w-full
+              max-w-6xl
+              min-h-[360px]
+              border-2
+              border-dashed
+              rounded-3xl
+              cursor-pointer
+              transition-all
+              duration-200
+              flex
+              items-center
+              justify-center
+              ${
+                isDragOver
+                  ? "border-red-500 bg-red-500/5"
+                  : "border-gray-700 bg-gray-900/30 hover:border-red-500"
+              }
+            `}
           >
 
-            <SortableContext
-              items={files.map(
-                (f) => f.id
-              )}
+            <input
+              ref={inputRef}
+              type="file"
+              multiple
+              accept="application/pdf"
+              className="hidden"
 
-              strategy={
-                verticalListSortingStrategy
-              }
-            >
+              onChange={async (e) => {
 
-              {files.map(
-                (
-                  fileData,
-                  index
-                ) => (
+                const selectedFiles =
+                  Array.from(e.target.files || []);
 
-                  <SortableItem
-                    key={
-                      fileData.id
-                    }
+                await addFiles(selectedFiles);
 
-                    fileData={
-                      fileData
-                    }
+                e.target.value = "";
+              }}
+            />
 
-                    index={index}
+            {/* CENTERED CONTENT */}
 
-                    removeFile={
-                      removeFile
-                    }
-                  />
-                )
-              )}
+            <div className="text-center">
 
-            </SortableContext>
+              {/* ICON */}
+              <div className="flex justify-center mb-5">
 
-          </DndContext>
+                <div className="w-20 h-20 rounded-2xl bg-gray-800 border border-gray-700 flex items-center justify-center">
+
+                  <svg
+                    width="42"
+                    height="42"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    className="text-gray-300"
+                  >
+                    <path
+                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                    />
+
+                    <polyline points="14 2 14 8 20 8" />
+
+                    <line
+                      x1="8"
+                      y1="13"
+                      x2="16"
+                      y2="13"
+                    />
+
+                    <line
+                      x1="8"
+                      y1="17"
+                      x2="14"
+                      y2="17"
+                    />
+
+                  </svg>
+
+                </div>
+
+              </div>
+
+              <p className="text-xl font-semibold text-white">
+                Drag & drop PDFs here
+              </p>
+
+              <p className="text-sm text-gray-500 mt-2">
+                or click to browse files
+              </p>
+
+              <p className="text-xs text-gray-600 mt-5">
+                Fast • Secure • Local Processing
+              </p>
+
+            </div>
+
+          </div>
 
         </div>
-      )}
 
-      {/* PROGRESS */}
+      ) : (
 
-      {loading && (
+        /* ================================================= */
+        /* AFTER UPLOAD */
+        /* ================================================= */
 
-        <div className="mt-6">
+        <div className="h-full">
 
-          <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
+          {/* HEADER */}
 
-            <div
-              className="bg-red-600 h-full transition-all duration-300"
-              style={{
-                width:
-                  `${progress}%`
+          <div className="flex items-center justify-between mb-7">
+
+
+            {/* ADD FILES */}
+
+            <button
+              onClick={() =>
+                inputRef.current?.click()
+              }
+
+              className="
+                group
+                flex
+                items-center
+                gap-3
+                px-4
+                py-3
+                rounded-2xl
+                border
+                border-gray-800
+                bg-gray-900/70
+                hover:border-red-500
+                hover:bg-gray-900
+                transition-all
+              "
+            >
+
+              <div
+                className="
+                  w-10
+                  h-10
+                  rounded-xl
+                  bg-red-600
+                  group-hover:bg-red-500
+                  flex
+                  items-center
+                  justify-center
+                  transition
+                "
+              >
+
+                <span className="text-white text-2xl leading-none">
+                  +
+                </span>
+
+              </div>
+
+              <div className="text-left">
+
+                <p className="text-sm font-semibold text-white">
+                  Add Files
+                </p>
+
+                <p className="text-xs text-gray-500">
+                  Add more PDFs
+                </p>
+
+              </div>
+
+            </button>
+
+            <input
+              ref={inputRef}
+              type="file"
+              multiple
+              accept="application/pdf"
+              className="hidden"
+
+              onChange={async (e) => {
+
+                const selectedFiles =
+                  Array.from(e.target.files || []);
+
+                await addFiles(selectedFiles);
+
+                e.target.value = "";
               }}
             />
 
           </div>
 
-          <p className="text-gray-400 text-sm mt-2">
-            Merging...
-            {' '}
-            {progress}%
-          </p>
+
+          {/* ================================================= */}
+          {/* PDF CARDS */}
+          {/* ================================================= */}
+
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+
+            <SortableContext
+              items={files.map((f) => f.id)}
+              strategy={verticalListSortingStrategy}
+            >
+
+              <div className="flex flex-col gap-4 pb-10">
+
+                {files.map(
+                  (fileData, index) => (
+
+                    <SortablePDFCard
+                      key={fileData.id}
+                      fileData={fileData}
+                      index={index}
+                      removeFile={removeFile}
+                    />
+
+                  )
+                )}
+
+              </div>
+
+            </SortableContext>
+
+          </DndContext>
+
+
+          {/* ================================================= */}
+          {/* PROCESSING */}
+          {/* ================================================= */}
+
+          {loading && (
+
+            <div className="fixed bottom-7 left-1/2 -translate-x-1/2 w-[420px] bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-2xl">
+
+              <div className="flex justify-between mb-2">
+
+                <span className="text-sm text-gray-300">
+                  Merging PDFs
+                </span>
+
+                <span className="text-sm text-gray-400">
+                  {progress}%
+                </span>
+
+              </div>
+
+              <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+
+                <div
+                  className="h-full bg-red-600 transition-all duration-300"
+                  style={{
+                    width: `${progress}%`
+                  }}
+                />
+
+              </div>
+
+            </div>
+
+          )}
 
         </div>
+
       )}
 
-      {/* BUTTON */}
+    </div>
 
-      {files.length > 0 && (
-
-        <button
-
-          onClick={mergePDFs}
-
-          disabled={loading}
-
-          className={`w-full mt-6 py-4 rounded-2xl text-white font-medium transition ${
-            loading
-              ? 'bg-gray-700 cursor-not-allowed'
-              : 'bg-red-600 hover:bg-red-700'
-          }`}
-        >
-
-          {loading
-            ? 'Processing...'
-            : `Merge ${files.length} PDF${files.length !== 1 ? 's' : ''}`}
-
-        </button>
-      )}
-
-      {/* FOOTER */}
-
-      <div className="flex justify-center gap-6 mt-10 text-gray-600 text-xs">
-
-        <div>
-          🔒 Local Processing
-        </div>
-
-        <div>
-          ⚡ Fast Merging
-        </div>
-
-        <div>
-          ∞ No Limits
-        </div>
-
-      </div>
-
-    </ToolWorkspace>
-  );
+  </ToolWorkspace>
+);
 }
