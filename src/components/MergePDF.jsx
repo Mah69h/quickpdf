@@ -525,11 +525,17 @@ const addFiles = async (newFiles) => {
 
     onDrop={handleDrop}
 
-    className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition-all duration-200 ${
-      isDragOver
-        ? 'border-red-500 bg-gray-900'
-        : 'border-gray-700 bg-gray-900 hover:border-red-500'
-    }`}
+className={`w-full h-[420px]
+  border-2 border-dashed
+  rounded-3xl
+  cursor-pointer
+  transition-all duration-200
+  flex items-center justify-center
+  ${
+    isDragOver
+      ? 'border-red-500 bg-gray-900'
+      : 'border-gray-700 bg-gray-900 hover:border-red-500'
+  }`}
   >
 
     <input
@@ -552,17 +558,21 @@ const addFiles = async (newFiles) => {
       }}
     />
 
-    <div className="text-6xl mb-4">
-      📄
-    </div>
+<div className="text-center">
 
-    <p className="text-xl text-white font-medium">
-      Drag & drop PDFs here
-    </p>
+  <div className="text-6xl mb-5">
+    📄
+  </div>
 
-    <p className="text-sm text-gray-500 mt-2">
-      Fast • Secure • Local Processing
-    </p>
+  <p className="text-2xl text-white font-semibold">
+    Drag & drop PDFs here
+  </p>
+
+  <p className="text-sm text-gray-500 mt-3">
+    Fast • Secure • Local Processing
+  </p>
+
+</div>
 
   </div>
 
