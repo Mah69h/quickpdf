@@ -11,7 +11,7 @@ export default function ToolWorkspace({
 
       <div
         className="
-          min-h-screen
+          min-h-[calc(100vh-72px)]
           bg-gradient-to-br
           from-gray-950
           via-gray-900
@@ -19,30 +19,29 @@ export default function ToolWorkspace({
           text-white
         "
       >
-        
-        <div
-          className="
-            flex
-            min-h-[calc(100vh-180px)]
-          "
-        >
 
-          {/* LEFT WORKSPACE */}
+        <div className="flex min-h-[calc(100vh-72px)]">
 
-          <div
+          {/* MAIN WORKSPACE */}
+
+          <main
             className="
               flex-1
+              min-w-0
               p-8
+              overflow-hidden
             "
           >
             {children}
-          </div>
+          </main>
 
-          {/* RIGHT PANEL */}
 
-          <div
+          {/* RIGHT SIDEBAR */}
+
+          <aside
             className="
               w-[340px]
+              flex-shrink-0
               border-l
               border-white/10
               bg-black/20
@@ -50,7 +49,7 @@ export default function ToolWorkspace({
             "
           >
             {sidebar}
-          </div>
+          </aside>
 
         </div>
 
