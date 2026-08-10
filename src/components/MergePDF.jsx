@@ -556,7 +556,7 @@ return (
   <ToolWorkspace
     title=""
     sidebar={
-      <div className="h-full flex flex-col px-7 py-8">
+      <div className="h-full px-2 py-0">
 
         {/* SIDEBAR TITLE */}
         <h2 className="text-2xl font-bold text-white mb-7">
@@ -777,7 +777,7 @@ return (
         /* AFTER UPLOAD */
         /* ================================================= */
 
-        <div>
+        <div className="h-full pt-2">
 
           {/* HEADER */}
 

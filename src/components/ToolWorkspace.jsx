@@ -6,33 +6,45 @@ export default function ToolWorkspace({
   sidebar
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white">
-
+    <>
       <Navbar />
 
-      <div className="flex">
+      <div
+        className="
+          min-h-[calc(100vh-86px)]
+          bg-gradient-to-br
+          from-gray-950
+          via-gray-900
+          to-black
+          text-white
+        "
+      >
 
-        {/* MAIN WORKSPACE */}
-        <main className="flex-1 p-8">
-          {children}
-        </main>
+        <div className="flex min-h-[calc(100vh-86px)]">
 
-        {/* RIGHT SIDEBAR */}
-        <aside
-          className="
-    w-[340px]
-    border-l
-    border-white/10
-    bg-black/20
-    p-6
-    min-h-[calc(100vh-86px)]
-          "
-        >
-          {sidebar}
-        </aside>
+          {/* LEFT WORKSPACE */}
+          <div className="flex-1 px-8 pt-3 pb-8">
+            {children}
+          </div>
+
+          {/* RIGHT PANEL */}
+          <div
+            className="
+              w-[340px]
+              border-l
+              border-white/10
+              bg-black/20
+              px-6
+              pt-3
+              pb-6
+            "
+          >
+            {sidebar}
+          </div>
+
+        </div>
 
       </div>
-
-    </div>
+    </>
   );
 }
