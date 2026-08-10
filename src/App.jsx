@@ -5,6 +5,7 @@ import {
 
 import Home from './pages/Home';
 
+import About from './pages/About';
 import Pricing from './pages/Pricing';
 import MergePDF from './components/MergePDF';
 import SplitPDF from './components/SplitPDF';
@@ -44,6 +45,11 @@ function App() {
 <Route
   path="/pricing"
   element={<Pricing />}
+/>
+
+<Route
+  path="/about"
+  element={<About />}
 />
 
       <Route
