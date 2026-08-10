@@ -202,41 +202,41 @@ cursor-pointer
 </div>
             </div>
 
-            <a
-              href="/pricing"
-              className="
-                text-sm font-medium
-                text-gray-300
-                hover:text-white
-                transition
-              "
-            >
-              PRICING
-            </a>
+<Link
+  to="/pricing"
+  className="
+    text-sm font-medium
+    text-gray-300
+    hover:text-white
+    transition
+  "
+>
+  PRICING
+</Link>
 
-            <a
-              href="/about"
-              className="
-                text-sm font-medium
-                text-gray-300
-                hover:text-white
-                transition
-              "
-            >
-              ABOUT US
-            </a>
+<Link
+  to="/about"
+  className="
+    text-sm font-medium
+    text-gray-300
+    hover:text-white
+    transition
+  "
+>
+  ABOUT US
+</Link>
 
-            <a
-              href="/contact"
-              className="
-                text-sm font-medium
-                text-gray-300
-                hover:text-white
-                transition
-              "
-            >
-              CONTACT
-            </a>
+<Link
+  to="/contact"
+  className="
+    text-sm font-medium
+    text-gray-300
+    hover:text-white
+    transition
+  "
+>
+  CONTACT
+</Link>
 
                 </nav>
 
