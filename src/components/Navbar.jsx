@@ -28,16 +28,18 @@ export default function Navbar() {
 
 <div className="flex items-center gap-0">
 
- <img 
-src={logo} 
-alt="QuickPDF"
-className=" 
-w-[300px] 
-object-contain
-cursor-pointer 
--ml-20 
-"
-/>
+<Link to="/" className="flex items-center">
+  <img
+    src={logo}
+    alt="QuickPDF"
+    className="
+      w-[300px]
+      object-contain
+      cursor-pointer
+      -ml-4
+    "
+  />
+</Link>
 
   <nav
     className="
