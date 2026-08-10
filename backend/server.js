@@ -585,6 +585,36 @@ app.post('/pdf-to-excel', upload.single('file'), (req, res) => {
     );
   });
 });
+
+// ========================================
+// SERVE REACT FRONTEND
+// ========================================
+
+const frontendPath = path.join(__dirname, 'dist');
+
+app.use(express.static(frontendPath));
+
+// React Router fallback
+app.get('*', (req, res, next) => {
+
+  // Don't interfere with API routes
+  if (
+    req.path.startsWith('/compress') ||
+    req.path.startsWith('/word-to-pdf') ||
+    req.path.startsWith('/ppt-to-pdf') ||
+    req.path.startsWith('/excel-to-pdf') ||
+    req.path.startsWith('/pdf-to-word') ||
+    req.path.startsWith('/pdf-to-ppt') ||
+    req.path.startsWith('/pdf-to-excel')
+  ) {
+    return next();
+  }
+
+  res.sendFile(
+    path.join(frontendPath, 'index.html')
+  );
+});
+
 app.listen(5000, () =>
   console.log('🚀 Server running on port 5000')
 );
