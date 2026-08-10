@@ -7,6 +7,7 @@ import Home from './pages/Home';
 
 import About from './pages/About';
 import Pricing from './pages/Pricing';
+import Contact from './pages/Contact';
 import MergePDF from './components/MergePDF';
 import SplitPDF from './components/SplitPDF';
 import CompressPDF from './components/CompressPDF';
@@ -50,6 +51,11 @@ function App() {
 <Route
   path="/about"
   element={<About />}
+/>
+
+<Route
+  path="/contact"
+  element={<Contact />}
 />
 
       <Route
