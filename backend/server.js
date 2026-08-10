@@ -4,6 +4,10 @@ const cors = require('cors');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
+// Serve React frontend
+app.use(express.static(path.join(__dirname, 'dist')));
+
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
 }
@@ -614,6 +618,34 @@ app.get('/{*splat}', (req, res, next) => {
     path.join(frontendPath, 'index.html')
   );
 });
+
+// React Router fallback
+app.use((req, res, next) => {
+  if (req.method !== 'GET') {
+    return next();
+  }
+
+  // Don't intercept API routes
+  if (
+    req.path.startsWith('/compress') ||
+    req.path.startsWith('/word-to-pdf') ||
+    req.path.startsWith('/ppt-to-pdf') ||
+    req.path.startsWith('/excel-to-pdf') ||
+    req.path.startsWith('/pdf-to-word') ||
+    req.path.startsWith('/pdf-to-ppt') ||
+    req.path.startsWith('/pdf-to-excel')
+  ) {
+    return next();
+  }
+
+  res.sendFile(
+    path.join(__dirname, 'dist', 'index.html')
+  );
+});
+
+// ==========================================
+// START SERVER
+// ==========================================
 
 const PORT = process.env.PORT || 5000;
 
