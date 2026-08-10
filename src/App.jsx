@@ -5,6 +5,7 @@ import {
 
 import Home from './pages/Home';
 
+import Pricing from './pages/Pricing';
 import MergePDF from './components/MergePDF';
 import SplitPDF from './components/SplitPDF';
 import CompressPDF from './components/CompressPDF';
@@ -39,6 +40,11 @@ function App() {
         path="/"
         element={<Home />}
       />
+
+<Route
+  path="/pricing"
+  element={<Pricing />}
+/>
 
       <Route
         path="/merge-pdf"
@@ -141,6 +147,8 @@ function App() {
       />
 
     </Routes>
+
+  
   );
 }
 
