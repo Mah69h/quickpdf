@@ -644,7 +644,7 @@ return (
     {/* MAIN WORKSPACE */}
     {/* ================================================= */}
 
-    <div className="h-full px-10 py-8">
+    <div className="px-10 pt-6 pb-8">
 
       {/* ================================================= */}
       {/* BEFORE UPLOAD */}
@@ -777,7 +777,7 @@ return (
         /* AFTER UPLOAD */
         /* ================================================= */
 
-        <div className="h-full">
+        <div>
 
           {/* HEADER */}
 

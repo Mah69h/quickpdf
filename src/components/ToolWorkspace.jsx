@@ -10,22 +10,22 @@ export default function ToolWorkspace({
 
       <Navbar />
 
-      <div className="flex min-h-[calc(100vh-72px)]">
+      <div className="flex">
 
         {/* MAIN WORKSPACE */}
-        <main className="flex-1 min-w-0 p-8">
+        <main className="flex-1 p-8">
           {children}
         </main>
 
         {/* RIGHT SIDEBAR */}
         <aside
           className="
-            w-[340px]
-            flex-shrink-0
-            border-l
-            border-white/10
-            bg-black/20
-            p-6
+    w-[340px]
+    border-l
+    border-white/10
+    bg-black/20
+    p-6
+    min-h-[calc(100vh-86px)]
           "
         >
           {sidebar}
