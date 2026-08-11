@@ -630,9 +630,11 @@ app.use((req, res, next) => {
 // ==========================================
 // START SERVER
 // ==========================================
+console.log("HOST:", "0.0.0.0");
+console.log("PORT ENV:", process.env.PORT);
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 10000;
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server running on 0.0.0.0:${PORT}`);
 });

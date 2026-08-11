@@ -40,6 +40,6 @@ COPY --from=frontend /frontend/dist ./dist
 
 RUN mkdir -p uploads
 
-EXPOSE 5000
+EXPOSE 10000
 
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "node server.js"]
