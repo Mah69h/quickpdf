@@ -5,8 +5,6 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Serve React frontend
-app.use(express.static(path.join(__dirname, 'dist')));
 
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
